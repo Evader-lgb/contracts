@@ -15,3 +15,9 @@ npx hardhat node
 node scripts/sample-script.js
 npx hardhat help
 ```
+
+Deploy Polygon Testnet
+
+```shell
+npx hardhat run --network mumbai scripts/deploy-Greeter.js  
+```
