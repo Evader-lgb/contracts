@@ -12,7 +12,11 @@ describe("Contract HelloWorld", function () {
 
         expect(await helloworld.saySomething()).to.equal("I'm tester!");
 
-        await helloworld.setSaySomething("i'm a new guy!");
+        const setSaySomethingTx = await helloworld.setSaySomething("i'm a new guy!");
+
+        //wait until the transaction is mined
+        await setSaySomethingTx.wait();
+
         expect(await helloworld.saySomething()).to.equal("i'm a new guy!");
 
     })
