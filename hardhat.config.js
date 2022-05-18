@@ -1,6 +1,8 @@
 require("@nomiclabs/hardhat-waffle");
 require("dotenv").config();
 
+require('hardhat-abi-exporter');
+
 
 const { ALCHEMY_API_URL, PRIVATE_KEY } = process.env;
 const mnemonic = PRIVATE_KEY
