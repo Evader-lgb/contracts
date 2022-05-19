@@ -44,14 +44,16 @@ npx hardhat export-abi
 
 生成合约到对应的目录结构
 
-contracts
-  abi
-    contracts
-      HelloWorld.sol
-        HelloWorld.json
-      OtherXXX.sol
-        OtherXXX.json
-  ...
+```bash
+contracts/
+├── abi/
+│   └── contracts/
+│       ├── Helloworld.sol/
+│       │   └── Helloworld.json
+│       └── OtherXXX.sol/
+│           └── OtherXXX.json
+└── ...
+```
 
 ## Hardhat Tools Help
 
