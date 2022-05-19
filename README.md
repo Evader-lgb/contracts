@@ -1,12 +1,58 @@
 # Macondo contracts
 
-Update With npm
+## 如何进行开发
+
+### 开发原则
+
+#### TDD(测试驱动开发)
+
+开发流程需要严格遵循测试驱动开发原则,先写测试用例,再写功能实现.
+
+#### 代码提交,需要测试用例全部通过
+
+#### 增量设计
+
+### 实际工程开发
+
+#### Update With npm
 
 ```shell
+git clone https://github.com/W3-Macondo/contracts.git
+cd contracts
 npm install --package-lock-only
 ```
 
-## 合约自动化测试
+工程结构如下
+
+```shell
+contracts/
+├── contracts          ---合约源代码目录，主要存放 *.sol  /
+│   ├── HelloWorld.sol
+│   └── ...          
+├── scripts            ---js脚本目录，主要存放部署脚本。/
+│   ├── HelloWorld-deploy.js
+│   └── ...
+├── test               ---合约单元测试目录/
+│   ├── HelloWorld-test.js 
+│   └── ...
+├── hardhat.config.js  ---hardhat配置文件
+├── package.json
+├── .env               ---环境变量文件（需要自己手动建立）
+└── ...
+```
+
+### env文件说明
+
+```env
+#ALCHEMY API地址
+ALCHEMY_API_URL=https://xxx/v2/xxx
+#ALCHEMY DAPP Key
+ALCHEMY_API_KEY="xxx"
+#部署合约使用的私钥
+PRIVATE_KEY="3xxx"
+```
+
+## 自动化测试
 
 Running Test Locally (Recommend)
 
@@ -20,7 +66,7 @@ Running Test On Polygon Testnet
 npx hardhat test --network mumbai 
 ```
 
-## 合约部署
+## 部署
 
 ### 部署合约到测试网络 or 正式网络
 
@@ -48,8 +94,8 @@ npx hardhat export-abi
 contracts/
 ├── abi/
 │   └── contracts/
-│       ├── Helloworld.sol/
-│       │   └── Helloworld.json
+│       ├── HelloWorld.sol/
+│       │   └── HelloWorld.json
 │       └── OtherXXX.sol/
 │           └── OtherXXX.json
 └── ...
