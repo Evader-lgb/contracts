@@ -85,7 +85,7 @@ HelloWorld deployed to:0x3F0528D040f31ace17a0c733469145928b9C88a4
 ### 编译合约ABI
 
 ```shell
-npx hardhat export-abi
+npm run compile
 ```
 
 生成合约到对应的目录结构
@@ -95,11 +95,15 @@ contracts/
 ├── abi/
 │   └── contracts/
 │       ├── HelloWorld.sol/
-│       │   └── HelloWorld.json
+│       │   ├── HelloWorld.json  ---abi 描述文件
+│       │   └── HelloWorld.ts    ---abi Typescript文件
 │       └── OtherXXX.sol/
-│           └── OtherXXX.json
+│           ├── OtherXXX.json
+│           └── OtherXXX.ts
 └── ...
 ```
+
+拷贝`abi/`目录下的文件到对应的工程里面使用
 
 ## Hardhat Tools Help
 
