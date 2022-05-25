@@ -71,7 +71,7 @@ npx hardhat test --network mumbai
 ### 部署合约到测试网络 or 正式网络
 
 ```shell
-npx hardhat run --network mumbai scripts/HelloWorld-deploy.js  
+npx hardhat run --network mumbai scripts/HelloWorld-deploy.ts  
 ```
 
 ### 记录合约部署后的地址
