@@ -1,7 +1,8 @@
-require("@nomiclabs/hardhat-waffle");
-require("dotenv").config();
+import "@nomiclabs/hardhat-waffle";
+import 'dotenv/config';
+import { task } from "hardhat/config";
 
-require('hardhat-abi-exporter');
+import 'hardhat-abi-exporter';
 
 
 const { ALCHEMY_API_URL, PRIVATE_KEY } = process.env;
