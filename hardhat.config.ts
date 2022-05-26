@@ -1,12 +1,11 @@
 import "@nomiclabs/hardhat-waffle";
-import 'dotenv/config';
+import "dotenv/config";
 import { task } from "hardhat/config";
 
-import 'hardhat-abi-exporter';
-
+import "hardhat-abi-exporter";
 
 const { ALCHEMY_API_URL, PRIVATE_KEY } = process.env;
-const mnemonic = PRIVATE_KEY
+const mnemonic = PRIVATE_KEY;
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
 task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
@@ -30,11 +29,17 @@ module.exports = {
       url: "https://data-seed-prebsc-1-s1.binance.org:8545",
       chainId: 97,
       gasPrice: 20000000000,
-      accounts: [`0x${PRIVATE_KEY}`]
+      accounts: [`0x${PRIVATE_KEY}`],
     },
     mumbai: {
       url: ALCHEMY_API_URL,
-      accounts: [`0x${PRIVATE_KEY}`]
-    }
-  }
+      accounts: [`0x${PRIVATE_KEY}`],
+    },
+    hardhat: {
+      forking: {
+        url: ALCHEMY_API_URL,
+        blockNumber: 26459212
+      },
+    },
+  },
 };
