@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 
 const { ALCHEMY_API_MAINNET_URL, PRIVATE_KEY } = process.env;
-describe.only("TokenTransfer", function () {
+describe("TokenTransfer", function () {
   it("TokenTransfer Test", async function () {
     const TokenTransfer = await ethers.getContractFactory("TokenTransfer");
     const tokenTransfer = await TokenTransfer.deploy(
@@ -32,6 +32,7 @@ describe.only("TokenTransfer", function () {
     const balanceAfter = await tokenTransfer.getContractBalance();
 
     console.log("balanceAfter", balanceAfter);
+    expect(balanceAfter).to.equal("1000000000000000000");
 
     // check counter
     const counter = await tokenTransfer.counter();
