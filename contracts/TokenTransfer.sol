@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract TokenTransfer is Ownable {
     //public counter
-    uint256 private counter;
+    uint256 public counter;
     //token address
     address private token;
 
@@ -16,13 +16,13 @@ contract TokenTransfer is Ownable {
 
     constructor(address _token) {
         token = _token;
-        counter = 123;
+        counter = 0;
     }
 
     function deposit(uint256 _amount) public payable {
         uint256 _minAmount = 1 * 10**18;
         console.log("Depositing '%d' min: '%d'", _amount, _minAmount);
-        
+
         require(
             _amount >= _minAmount,
             "Amount must be greater than minimum amount"
