@@ -17,10 +17,17 @@ describe("FundCollection", function () {
     const FundCollectorMacondoUSDT = await ethers.getContractFactory(
       "FundCollectorMacondoUSDT"
     );
+    const fundCollectorMacondoUSDTInitCode = ethers.utils.keccak256(
+      FundCollectorMacondoUSDT.bytecode
+    );
+    console.log(
+      "fundCollectorMacondoUSDTInitCode",
+      fundCollectorMacondoUSDTInitCode
+    );
     const computedAddress = ethers.utils.getCreate2Address(
       address,
       salt,
-      ethers.utils.keccak256(FundCollectorMacondoUSDT.bytecode)
+      fundCollectorMacondoUSDTInitCode
     );
     console.log("computedAddress", computedAddress);
   });
