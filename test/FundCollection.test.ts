@@ -1,7 +1,7 @@
 import { ethers } from "hardhat";
 
 const { ALCHEMY_API_MAINNET_URL, PRIVATE_KEY } = process.env;
-describe.only("FundCollection", function () {
+describe("FundCollection", function () {
   it("FundCollection Test", async function () {
     const FundCollection = await ethers.getContractFactory("FundCollection");
     const fundCollection = await FundCollection.deploy();
@@ -13,7 +13,6 @@ describe.only("FundCollection", function () {
     const result = await fundCollection.createFundCollectionMacondoUSDT(salt);
 
     result.wait();
-    console.log("result", result);
 
     const FundCollectorMacondoUSDT = await ethers.getContractFactory(
       "FundCollectorMacondoUSDT"
