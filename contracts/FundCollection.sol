@@ -21,6 +21,8 @@ contract FundCollectorMacondoUSDT {
 }
 
 contract FundCollection {
+    event Deployed(address addr, uint256 salt);
+
     function createFundCollectionMacondoUSDT(uint256 salt) public {
         //get FundCollectorMacondoUSDT init_code
         bytes memory bytecode = type(FundCollectorMacondoUSDT).creationCode;
@@ -29,6 +31,8 @@ contract FundCollection {
             let codeSize := mload(bytecode)
             newAddr := create2(0, add(bytecode, 32), codeSize, salt)
         }
-        console.log("adresss: ", newAddr);
+
+        console.log("addresss: ", newAddr);
+        emit Deployed(newAddr, salt);
     }
 }
