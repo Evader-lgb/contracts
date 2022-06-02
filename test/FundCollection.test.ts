@@ -47,7 +47,15 @@ describe("FundCollection", function () {
   it("FundCollection:CollectionMacondoUSDT Use Case", async function () {
     const FundCollection = await ethers.getContractFactory("FundCollection");
     const fundCollection = await FundCollection.deploy();
-    const address = await (await fundCollection.deployed()).address;
+    const fundCollectionAddress = await (
+      await fundCollection.deployed()
+    ).address;
+    console.log("fundCollection address", fundCollectionAddress);
+
+    const fundCollectionBalance = await fundCollection.provider.getBalance(
+      fundCollectionAddress
+    );
+    console.log("fundCollectionBalance", fundCollectionBalance);
 
     //compute salt
     const salt = ethers.utils.id("12345");
@@ -60,13 +68,14 @@ describe("FundCollection", function () {
       FundCollectorMacondoUSDT.bytecode
     );
     const computedAddress = ethers.utils.getCreate2Address(
-      address,
+      fundCollectionAddress,
       salt,
       fundCollectorMacondoUSDTInitCode
     );
+    console.log("computedAddress", computedAddress);
 
     const TokenAddress = "0x4Ea9C43e09A51ba39a31a29f2b7494F60C766E66";
-    const hotWallet = "0x52830f99820f80ED2513Cd0bdA155F96Cc8aAed3";
+    const hotWalletAddress = "0x52830f99820f80ED2513Cd0bdA155F96Cc8aAed3";
     //get TokenERC20 contract
     const TokenContract = new ethers.Contract(
       TokenAddress,
@@ -80,7 +89,7 @@ describe("FundCollection", function () {
     expect(computeAddressBalance).to.equal(0);
     console.log("computed balance", computeAddressBalance);
 
-    const hotWalletBalance = await TokenContract.balanceOf(hotWallet);
+    const hotWalletBalance = await TokenContract.balanceOf(hotWalletAddress);
     expect(hotWalletBalance).to.equal(0);
     console.log("hotWallet balance", hotWalletBalance);
 
@@ -93,7 +102,8 @@ describe("FundCollection", function () {
       computedAddress,
       1000
     );
-    await tx.wait();
+    const txWait = await tx.wait();
+    console.log("transfer gas used", txWait.gasUsed);
     const computeAddressBalanceAfterTransfer = await TokenContract.balanceOf(
       computedAddress
     );
@@ -103,10 +113,17 @@ describe("FundCollection", function () {
       computeAddressBalanceAfterTransfer
     );
 
-    await expect(fundCollection.createFundCollectionMacondoUSDT(salt))
-      .to.emit(fundCollection, "Deployed")
-      .withArgs(computedAddress, salt);
-    console.log("computedAddress", computedAddress);
+    //开始归集资金
+    //设置手续费账号
+    const [owner, gasFeeAccount] = await ethers.getSigners();
+    console.log("gasFeeAccount address", gasFeeAccount.address);
+
+    //开始归集资金
+    const txCollection = await fundCollection
+      .connect(gasFeeAccount)
+      .createFundCollectionMacondoUSDT(salt);
+    const txCollectionReceipt = await txCollection.wait();
+    console.log("Collection gas used", txCollectionReceipt.gasUsed);
 
     //检查 computeAddress 余额是否为0
     const computeAddressBalanceAfterCollect = await TokenContract.balanceOf(
@@ -120,12 +137,17 @@ describe("FundCollection", function () {
 
     //check hotWallet balance
     const hotWalletBalanceAfterCollect = await TokenContract.balanceOf(
-      hotWallet
+      hotWalletAddress
     );
     expect(hotWalletBalanceAfterCollect).to.equal(1000);
     console.log(
       "hotWallet balance after  collect",
       hotWalletBalanceAfterCollect
     );
+
+    const fundCollectionBalanceAfter = await fundCollection.provider.getBalance(
+      hotWalletAddress
+    );
+    console.log("fundCollectionBalanceAfter", fundCollectionBalanceAfter);
   });
 });
