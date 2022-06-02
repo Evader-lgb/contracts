@@ -13,6 +13,9 @@ describe("FundCollection", function () {
     console.log("address", address);
   });
 
+  /**
+   * @dev Test FundCollection:deposit
+   */
   it("FundCollection:createFundCollectionMacondoUSDT", async function () {
     const FundCollection = await ethers.getContractFactory("FundCollection");
     const fundCollection = await FundCollection.deploy();
@@ -44,6 +47,9 @@ describe("FundCollection", function () {
     console.log("computedAddress", computedAddress);
   });
 
+  /**
+   * @dev Test FundCollection:collection MacondoUSDT
+   */
   it("FundCollection:CollectionMacondoUSDT Use Case", async function () {
     const FundCollection = await ethers.getContractFactory("FundCollection");
     const fundCollection = await FundCollection.deploy();
@@ -133,6 +139,8 @@ describe("FundCollection", function () {
       totalCollectionUSDT = totalCollectionUSDT.add(1000);
     };
 
+    await collectionFundFunction();
+    await collectionFundFunction();
     await collectionFundFunction();
     await collectionFundFunction();
     await collectionFundFunction();
