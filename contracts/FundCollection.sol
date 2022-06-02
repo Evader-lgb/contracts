@@ -6,7 +6,7 @@ import "hardhat/console.sol";
 
 contract FundCollectorMacondoUSDT {
     address internal token = 0x4Ea9C43e09A51ba39a31a29f2b7494F60C766E66;
-    address internal hotWallet = 0x29ba8d4B681C38179D829647D13608Dc5F43A285;
+    address internal hotWallet = 0x52830f99820f80ED2513Cd0bdA155F96Cc8aAed3;
 
     constructor() {
         // send all tokens from this contract to hotwallet
