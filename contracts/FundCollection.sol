@@ -34,7 +34,7 @@ contract FundCollection {
             newAddr := create2(0, add(bytecode, 32), codeSize, salt)
         }
 
-        console.log("addresss: ", newAddr);
+        console.log("deloy factory contract addresss: ", newAddr);
         emit Deployed(newAddr, salt);
     }
 }
