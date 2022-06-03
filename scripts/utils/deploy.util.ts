@@ -38,13 +38,13 @@ async function _deploy(DeployContractName: string, deployContract: Contract) {
  * @param contractName  合约名称
  * @returns  合约地址
  */
-export async function deployNormal(contractName: string) {
+export async function deployUpgradeProxy(contractName: string) {
   const DeployContractName = contractName;
   const DeployContract = await hre.ethers.getContractFactory(
     DeployContractName
   );
-  const deployContract = await DeployContract.deploy();
-
+  const deployContract = await upgrades.deployProxy(DeployContract);
+  
   console.log("[deploy contract]:deploy [%s] start", DeployContractName);
   const [deployer] = await hre.ethers.getSigners();
   console.log("[deploy contract]:deployer address", deployer.address);

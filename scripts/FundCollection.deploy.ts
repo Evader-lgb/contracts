@@ -21,47 +21,6 @@ async function firstDeploy() {
   return deployContract.address;
 }
 
-async function upgradeDeploy(contractAddress: string) {
-  const DeployContractName = "FundCollection";
-  const DeployContract = await hre.ethers.getContractFactory(
-    DeployContractName
-  );
-  const deployContract = await upgrades.upgradeProxy(
-    contractAddress,
-    DeployContract
-  );
-
-  console.log("[deploy contract]:deploy [%s] start", DeployContractName);
-  const [deployer] = await hre.ethers.getSigners();
-  console.log("[deploy contract]:deployer address", deployer.address);
-  const deployerBalance = await deployer.getBalance();
-  console.log(
-    "[deploy contract]:deployer balance before",
-    deployerBalance.toString()
-  );
-  await deployContract.deployed();
-  console.log(
-    "[deploy contract]:%s upgrade to: %s",
-    DeployContractName,
-    deployContract.address
-  );
-
-  const deployerBalanceAfter = await deployer.getBalance();
-  console.log(
-    "[deploy contract]:deployer balance after",
-    deployerBalanceAfter.toString()
-  );
-  console.log(
-    "[deploy contract]:deploy gas fee",
-    deployerBalance.sub(deployerBalanceAfter).toString()
-  );
-  console.log(
-    "[deploy contract]:deploy contract: [%s] complete",
-    DeployContractName
-  );
-  return deployContract.address;
-}
-
 async function main() {
   //   const contractAddress = null;
   const contractAddress = "0x33E7FB51160499a6D009BD504E25cc827BfB5e28";
