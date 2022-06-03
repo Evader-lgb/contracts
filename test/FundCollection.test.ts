@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { ethers } from "hardhat";
+import { ethers, upgrades } from "hardhat";
 
 const { ALCHEMY_API_MAINNET_URL, PRIVATE_KEY } = process.env;
 const TokenERC20ContractABI = require("../third_party_abi/TokenERC20.json");
@@ -11,6 +11,29 @@ describe("FundCollection", function () {
     expect(ethers.utils.isAddress(address)).to.be.true;
 
     console.log("address", address);
+  });
+
+  it.only("FundCollection:Deploy Upgrade Test", async function () {
+    const FundCollection = await ethers.getContractFactory("FundCollection");
+    const fundCollection = await upgrades.deployProxy(FundCollection);
+    const address = await (await fundCollection.deployed()).address;
+    expect(ethers.utils.isAddress(address)).to.be.true;
+    console.log("address", address);
+
+    const FundCollectionV1 = await ethers.getContractFactory("FundCollection");
+    const updatedFundCollectionV1 = await upgrades.upgradeProxy(
+      address,
+      FundCollectionV1
+    );
+    const updatedFundCollectionDeployV1 =
+      await updatedFundCollectionV1.deployed();
+
+    console.log(
+      "updatedFundCollectionDeployV1",
+      updatedFundCollectionDeployV1.address
+    );
+
+    expect(address).to.equal(updatedFundCollectionDeployV1.address);
   });
 
   /**
@@ -52,7 +75,7 @@ describe("FundCollection", function () {
    */
   it("FundCollection:CollectionMacondoUSDT Use Case", async function () {
     const FundCollection = await ethers.getContractFactory("FundCollection");
-    const fundCollection = await FundCollection.deploy();
+    const fundCollection = await upgrades.deployProxy(FundCollection);
     const fundCollectionAddress = await (
       await fundCollection.deployed()
     ).address;

@@ -2,6 +2,7 @@ import "@nomiclabs/hardhat-waffle";
 import "dotenv/config";
 import { task } from "hardhat/config";
 
+import "@openzeppelin/hardhat-upgrades";
 import "hardhat-abi-exporter";
 
 const { ALCHEMY_API_URL, PRIVATE_KEY } = process.env;
@@ -38,7 +39,7 @@ module.exports = {
     hardhat: {
       forking: {
         url: ALCHEMY_API_URL,
-        blockNumber: 26459212
+        blockNumber: 26459212,
       },
     },
   },
