@@ -1,5 +1,5 @@
 import { Contract } from "ethers";
-import hre, { upgrades } from "hardhat";
+import hre, { ethers, upgrades } from "hardhat";
 
 async function _deploy(DeployContractName: string, deployContract: Contract) {
   // We get the contract to deploy
@@ -20,7 +20,7 @@ async function _deploy(DeployContractName: string, deployContract: Contract) {
   );
   console.log(
     "[deploy contract]:deploy gas fee",
-    deployerBalance.sub(deployerBalanceAfter).toString()
+    ethers.utils.formatEther(deployerBalance.sub(deployerBalanceAfter))
   );
   console.log(
     "[deploy contract]:deploy contract: [%s] complete! address %s",
