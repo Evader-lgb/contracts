@@ -12,11 +12,6 @@ async function _deploy(DeployContractName: string, deployContract: Contract) {
     deployerBalance.toString()
   );
   await deployContract.deployed();
-  console.log(
-    "[deploy contract]:%s upgrade to: %s",
-    DeployContractName,
-    deployContract.address
-  );
 
   const deployerBalanceAfter = await deployer.getBalance();
   console.log(
@@ -28,8 +23,9 @@ async function _deploy(DeployContractName: string, deployContract: Contract) {
     deployerBalance.sub(deployerBalanceAfter).toString()
   );
   console.log(
-    "[deploy contract]:deploy contract: [%s] complete",
-    DeployContractName
+    "[deploy contract]:deploy contract: [%s] complete! address %s",
+    DeployContractName,
+    deployContract.address
   );
   return deployContract.address;
 }
@@ -44,7 +40,8 @@ export async function deployUpgradeProxy(contractName: string) {
     DeployContractName
   );
   const deployContract = await upgrades.deployProxy(DeployContract);
-  
+  return _deploy(DeployContractName, deployContract);
+
   console.log("[deploy contract]:deploy [%s] start", DeployContractName);
   const [deployer] = await hre.ethers.getSigners();
   console.log("[deploy contract]:deployer address", deployer.address);
