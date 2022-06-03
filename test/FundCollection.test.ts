@@ -13,7 +13,7 @@ describe("FundCollection", function () {
     console.log("address", address);
   });
 
-  it.only("FundCollection:Deploy Upgrade Test", async function () {
+  it("FundCollection:Deploy Upgrade Test", async function () {
     const FundCollection = await ethers.getContractFactory("FundCollection");
     const fundCollection = await upgrades.deployProxy(FundCollection);
     const address = await (await fundCollection.deployed()).address;
