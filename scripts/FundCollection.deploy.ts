@@ -5,6 +5,7 @@
 // Runtime Environment's members available in the global scope.
 // const hre = require("hardhat");
 import hre, { upgrades } from "hardhat";
+import { deployUpgradeUpdate } from "./utils/deploy.util";
 
 async function firstDeploy() {
   // We get the contract to deploy
@@ -65,7 +66,7 @@ async function main() {
   //   const contractAddress = null;
   const contractAddress = "0x33E7FB51160499a6D009BD504E25cc827BfB5e28";
   if (contractAddress) {
-    await upgradeDeploy(contractAddress);
+    await deployUpgradeUpdate("FundCollection", contractAddress);
   } else {
     await firstDeploy();
   }
