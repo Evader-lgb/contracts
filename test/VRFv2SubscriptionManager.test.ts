@@ -7,7 +7,7 @@ const contractAddress = "0xeABe0c63EBef2F49ec93d31369c9F1C552532C62";
 const { ALCHEMY_API_TESTNET_URL, PRIVATE_KEY } = process.env;
 
 describe("VRFv2SubscriptionManager", function () {
-  it("VRFv2SubscriptionManager Test", async function () {
+  it.skip("VRFv2SubscriptionManager Test", async function () {
     const VRFv2SubscriptionManager = await ethers.getContractFactory(
       "VRFv2SubscriptionManager"
     );
