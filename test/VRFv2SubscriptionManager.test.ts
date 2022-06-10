@@ -14,8 +14,11 @@ describe("VRFv2SubscriptionManager", function () {
     const vRFv2SubscriptionManager = await VRFv2SubscriptionManager.attach(
       contractAddress
     );
-    const provider = new ethers.providers.JsonRpcProvider(ALCHEMY_API_TESTNET_URL);
-    const signer = new ethers.Wallet(PRIVATE_KEY as string, provider);
+
+    const signer = new ethers.Wallet(
+      PRIVATE_KEY as string,
+      vRFv2SubscriptionManager.provider
+    );
     const s_subscriptionId = await vRFv2SubscriptionManager
       .connect(signer)
       .s_subscriptionId();

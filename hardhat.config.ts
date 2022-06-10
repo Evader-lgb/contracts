@@ -39,7 +39,6 @@ module.exports = {
     hardhat: {
       forking: {
         url: ALCHEMY_API_TESTNET_URL,
-        blockNumber: 26459212,
       },
     },
   },
