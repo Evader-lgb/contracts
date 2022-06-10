@@ -5,7 +5,7 @@ import { task } from "hardhat/config";
 import "@openzeppelin/hardhat-upgrades";
 import "hardhat-abi-exporter";
 
-const { ALCHEMY_API_URL, PRIVATE_KEY } = process.env;
+const { ALCHEMY_API_TESTNET_URL, PRIVATE_KEY } = process.env;
 const mnemonic = PRIVATE_KEY;
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -33,12 +33,12 @@ module.exports = {
       accounts: [`0x${PRIVATE_KEY}`],
     },
     mumbai: {
-      url: ALCHEMY_API_URL,
+      url: ALCHEMY_API_TESTNET_URL,
       accounts: [`0x${PRIVATE_KEY}`],
     },
     hardhat: {
       forking: {
-        url: ALCHEMY_API_URL,
+        url: ALCHEMY_API_TESTNET_URL,
         blockNumber: 26459212,
       },
     },
