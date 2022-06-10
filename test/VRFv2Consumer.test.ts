@@ -11,8 +11,9 @@ describe("VRFv2Consumer", function () {
     const provider = new ethers.providers.JsonRpcProvider(
       ALCHEMY_API_MAINNET_URL
     );
-    // const signer = new ethers.Wallet(PRIVATE_KEY as string, provider);
+    // const signer = new ethers.Wallet(PRIVATE_KEY as string, vRFv2Consumer.provider);
     // const tx = await vRFv2Consumer.connect(signer).requestRandomWords();
+    
     // // const result = await vRFv2Consumer.connect(signer).s_requestId();
     // // console.log("result", result);
     // // expect(await macondoUSDT.name()).to.equal("Macondo-USDT");
