@@ -21,9 +21,10 @@ describe("RandomOracleConsumer", function () {
     await randomOracleConsumer.deployed();
   });
 
-  it("RandomOracleConsumer:Test", async function () {
-    const s_randomWords1 = await randomOracleConsumer.getRandomWords();
-    console.log("s_randomWords", s_randomWords1);
-    expect(s_randomWords1).to.be.empty;
+  it.only("RandomOracleConsumer:Test", async function () {
+    const s_randomWords = await randomOracleConsumer.getRandomWords();
+    console.log("s_randomWords", s_randomWords);
+    expect(s_randomWords).to.be.empty;
+
   });
 });

@@ -15,7 +15,7 @@ contract RandomOracleConsumer is VRFConsumerBaseV2 {
 
     // Rinkeby coordinator. For other networks,
     // see https://docs.chain.link/docs/vrf-contracts/#configurations
-    address vrfCoordinator = 0x7a1BaC17Ccc5b313516C5E16fb24f7659aA5ebed;
+    address vrfCoordinator;
 
     // The gas lane to use, which specifies the maximum gas price to bump to.
     // For a list of available gas lanes on each network,
@@ -37,7 +37,7 @@ contract RandomOracleConsumer is VRFConsumerBaseV2 {
     // Cannot exceed VRFCoordinatorV2.MAX_NUM_WORDS.
     uint32 numWords = 2;
 
-    uint256[] public s_randomWords;
+    uint256[] s_randomWords;
     uint256 public s_requestId;
     address s_owner;
 
