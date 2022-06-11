@@ -7,7 +7,7 @@ const contractAddress = "0xeABe0c63EBef2F49ec93d31369c9F1C552532C62";
 // 4.指定合约调用地址和默认调用私钥
 const { ALCHEMY_API_TESTNET_URL, PRIVATE_KEY } = process.env;
 
-describe("VRFv2SubscriptionManager", function () {
+describe.skip("VRFv2SubscriptionManager", function () {
   let vRFv2SubscriptionManager: Contract;
   let provider: any;
   beforeEach(async function () {
