@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import { BigNumber, Contract, Wallet } from "ethers";
 import { ethers } from "hardhat";
+import { ERC20TokenUtil } from "./utils/ERC20Token.util";
 // 3.指定合约的合约地址
 const contractAddress = "0xeABe0c63EBef2F49ec93d31369c9F1C552532C62";
 // 4.指定合约调用地址和默认调用私钥
@@ -38,7 +39,7 @@ describe("VRFv2SubscriptionManager", function () {
     expect(s_subscriptionId).to.be.instanceOf(BigNumber);
     expect(s_subscriptionId).to.equal(573);
 
-    const tokenLinkContract = createERCLink(signer);
+    const tokenLinkContract = ERC20TokenUtil.createTokenLink(signer);
     // balance of manager
     const balanceOfManager: BigNumber = await tokenLinkContract.balanceOf(
       contractAddress
@@ -68,10 +69,7 @@ describe("VRFv2SubscriptionManager", function () {
     expect(s_subscriptionId).to.be.instanceOf(BigNumber);
     expect(s_subscriptionId).to.equal(573);
 
-    const tokenLinkContract = createERC20Contract(
-      "0x326C977E6efc84E512bB9C30f76E30c160eD06FB",
-      signer
-    );
+    const tokenLinkContract = ERC20TokenUtil.createTokenLink(signer);
     const balance: BigNumber = await tokenLinkContract.balanceOf(
       signer.address
     );
