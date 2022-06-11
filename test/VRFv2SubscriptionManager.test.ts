@@ -20,17 +20,7 @@ describe("VRFv2SubscriptionManager", function () {
     provider = new ethers.providers.JsonRpcProvider(ALCHEMY_API_TESTNET_URL);
   });
 
-  it.only("VRFv2SubscriptionManager Test", async function () {
-    // const VRFv2SubscriptionManager = await ethers.getContractFactory(
-    //   "VRFv2SubscriptionManager"
-    // );
-    // const vRFv2SubscriptionManager = await VRFv2SubscriptionManager.attach(
-    //   contractAddress
-    // );
-    // const provider = new ethers.providers.JsonRpcProvider(
-    //   ALCHEMY_API_TESTNET_URL
-    // );
-
+  it("VRFv2SubscriptionManager Test", async function () {
     const signer = new ethers.Wallet(PRIVATE_KEY as string, provider);
     const contract = await vRFv2SubscriptionManager.connect(signer);
     const s_subscriptionId = await contract.s_subscriptionId();
@@ -43,24 +33,22 @@ describe("VRFv2SubscriptionManager", function () {
     const balanceOfManager: BigNumber = await tokenLinkContract.balanceOf(
       contractAddress
     );
+  });
 
-    // // const result = await vRFv2Consumer.connect(signer).s_requestId();
-    // // console.log("result", result);
-    // // expect(await macondoUSDT.name()).to.equal("Macondo-USDT");
-    // // expect(await macondoUSDT.symbol()).to.equal("USDT");
+  it("VRFv2SubscriptionManager:Generate random number", async function () {
+    const signer = new ethers.Wallet(PRIVATE_KEY as string, provider);
+    const contract = await vRFv2SubscriptionManager.connect(signer);
+    const tx = await contract.requestRandomWords({
+      gasLimit: 100000,
+    });
+    const receipt = await tx.wait();
+
+    const s_randomWords1 = await contract.s_randomWords(0);
+    const s_randomWords2 = await contract.s_randomWords(1);
+    console.log("s_randomWords", s_randomWords1, s_randomWords2);
   });
 
   it.skip("VRFv2SubscriptionManager Recharge Subscription Fee", async function () {
-    const VRFv2SubscriptionManager = await ethers.getContractFactory(
-      "VRFv2SubscriptionManager"
-    );
-    const vRFv2SubscriptionManager = await VRFv2SubscriptionManager.attach(
-      contractAddress
-    );
-    const provider = new ethers.providers.JsonRpcProvider(
-      ALCHEMY_API_TESTNET_URL
-    );
-
     const signer = new ethers.Wallet(PRIVATE_KEY as string, provider);
     const contract = await vRFv2SubscriptionManager.connect(signer);
     const s_subscriptionId = await contract.s_subscriptionId();
