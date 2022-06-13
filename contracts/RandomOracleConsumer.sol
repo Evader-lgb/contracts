@@ -35,9 +35,10 @@ contract RandomOracleConsumer is VRFConsumerBaseV2 {
 
     // For this example, retrieve 2 random values in one request.
     // Cannot exceed VRFCoordinatorV2.MAX_NUM_WORDS.
-    uint32 numWords = 2;
+    uint32 numWords = 3;
 
-    uint256[] s_randomWords;
+    mapping(uint256 => uint256[]) public s_requestIdToRandomWords;
+
     uint256 public s_requestId;
     address s_owner;
 
@@ -54,26 +55,34 @@ contract RandomOracleConsumer is VRFConsumerBaseV2 {
     }
 
     // Assumes the subscription is funded sufficiently.
-    function requestRandomWords() external onlyOwner {
+    function requestRandomWords() external onlyOwner returns (uint256) {
         // Will revert if subscription is not set and funded.
-        s_requestId = COORDINATOR.requestRandomWords(
+        uint256 requestId = COORDINATOR.requestRandomWords(
             keyHash,
             s_subscriptionId,
             requestConfirmations,
             callbackGasLimit,
             numWords
         );
+
+        s_requestId = requestId;
+        return requestId;
     }
 
     function fulfillRandomWords(
         uint256, /* requestId */
         uint256[] memory randomWords
     ) internal override {
-        s_randomWords = randomWords;
+        s_requestIdToRandomWords[s_requestId] = randomWords;
     }
 
-    function getRandomWords() public view onlyOwner returns (uint256[] memory) {
-        return s_randomWords;
+    function getRandomWords(uint256 requestId)
+        public
+        view
+        onlyOwner
+        returns (uint256[] memory)
+    {
+        return s_requestIdToRandomWords[requestId];
     }
 
     modifier onlyOwner() {

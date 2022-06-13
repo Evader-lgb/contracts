@@ -1,10 +1,10 @@
 import { expect } from "chai";
-import { Contract, ContractFactory } from "ethers";
+import { BigNumber, Contract, ContractFactory } from "ethers";
 import { ethers } from "hardhat";
 import random from "random";
 const seedRandom = require("seedrandom");
 // 3.指定合约的合约地址
-const contractAddress = "0x046d33a22149857FaAEc9440019D9782a6d138e4";
+const contractAddress = "0xCCFB5E9f45858b93ffA8932fD1ccE2373a9D9E25";
 // 4.指定合约调用地址和默认调用私钥
 const { ALCHEMY_API_TESTNET_URL, PRIVATE_KEY } = process.env;
 
@@ -24,21 +24,22 @@ describe("RandomOracleConsumer", function () {
   });
 
   it("RandomOracleConsumer:Test", async function () {
-    const s_randomWords = await contract.getRandomWords();
+    const s_randomWords = await contract.getRandomWords(1);
     console.log("s_randomWords", s_randomWords);
     expect(s_randomWords).to.be.empty;
+    const s_requestId = await contract.s_requestId();
+    console.log("s_requestId", s_requestId);
   });
 
-  it("RandomOracleConsumer:Request random number", async function () {
+  it.only("RandomOracleConsumer:Request random number", async function () {
     const signer = new ethers.Wallet(PRIVATE_KEY as string, provider);
     contract = ContractFactory.attach(contractAddress).connect(signer);
     const tx = await contract.requestRandomWords({
       gasLimit: 100000,
     });
-    const receipt = await tx.wait();
-    const s_randomWords = await contract.getRandomWords();
-    expect(s_randomWords).to.not.be.empty;
-    console.log("s_randomWords", s_randomWords);
+    const s_requestId: BigNumber = await contract.s_requestId();
+    const s_randomWords = await contract.getRandomWords(s_requestId.toString());
+    expect(s_randomWords).not.to.be.empty;
   });
 
   it("RandomOracleConsumer:Generate seed random number", async function () {
@@ -64,7 +65,7 @@ describe("RandomOracleConsumer", function () {
     ]);
   });
 
-  it.only("RandomOracleConsumer:Poker Knuth-Durstenfeld Shuffle", async function () {
+  it("RandomOracleConsumer:Poker Knuth-Durstenfeld Shuffle", async function () {
     const randomSeed = "0x7a1BaC17Ccc5b313516C5E16fb24f7659aA5ebed";
     const rng = random.clone(seedRandom(randomSeed));
     let r = [];
