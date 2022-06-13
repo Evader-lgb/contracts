@@ -4,7 +4,7 @@ import { ethers } from "hardhat";
 import random from "random";
 const seedRandom = require("seedrandom");
 // 3.指定合约的合约地址
-const contractAddress = "0xC38edB8370D29d1198Ab4b926f8c009B63a03013";
+const contractAddress = "0x8b19c40197961C96EB5a80EaB82317D26852a81d";
 // 4.指定合约调用地址和默认调用私钥
 const { ALCHEMY_API_TESTNET_URL, PRIVATE_KEY } = process.env;
 
@@ -31,7 +31,7 @@ describe("RandomOracleConsumer", function () {
     console.log("s_requestId", s_requestId);
   });
 
-  it("RandomOracleConsumer:Request random number", async function () {
+  it.only("RandomOracleConsumer:Request random number", async function () {
     const signer = new ethers.Wallet(PRIVATE_KEY as string, provider);
     contract = ContractFactory.attach(contractAddress).connect(signer);
     // await expect(contract.requestRandomWords({
@@ -48,7 +48,7 @@ describe("RandomOracleConsumer", function () {
     contract = ContractFactory.attach(contractAddress).connect(signer);
     await expect(
       contract.requestRandomWords({
-        gasLimit: 100000,
+        gasLimit: 300000,
       })
     ).to.emit(contract, "RequestComplete");
   });

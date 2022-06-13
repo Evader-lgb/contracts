@@ -31,14 +31,14 @@ contract RandomOracleConsumer is VRFConsumerBaseV2 {
     // this limit based on the network that you select, the size of the request,
     // and the processing of the callback request in the fulfillRandomWords()
     // function.
-    uint32 callbackGasLimit = 100000;
+    uint32 callbackGasLimit = 300000;
 
     // The default is 3, but you can set this higher.
     uint16 requestConfirmations = 3;
 
     // For this example, retrieve 2 random values in one request.
     // Cannot exceed VRFCoordinatorV2.MAX_NUM_WORDS.
-    uint32 numWords = 3;
+    uint32 numWords = 10;
 
     mapping(uint256 => uint256[]) s_requestIdToRandomWords;
 
