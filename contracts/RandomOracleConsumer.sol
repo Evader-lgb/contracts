@@ -10,6 +10,9 @@ import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 contract RandomOracleConsumer is VRFConsumerBaseV2 {
     VRFCoordinatorV2Interface COORDINATOR;
 
+    // 随机数请求完成
+    event RequestComplete(uint256 requestId);
+
     // Your subscription ID.
     uint64 s_subscriptionId;
 
@@ -37,7 +40,7 @@ contract RandomOracleConsumer is VRFConsumerBaseV2 {
     // Cannot exceed VRFCoordinatorV2.MAX_NUM_WORDS.
     uint32 numWords = 3;
 
-    mapping(uint256 => uint256[]) public s_requestIdToRandomWords;
+    mapping(uint256 => uint256[]) s_requestIdToRandomWords;
 
     uint256 public s_requestId;
     address s_owner;
@@ -55,7 +58,7 @@ contract RandomOracleConsumer is VRFConsumerBaseV2 {
     }
 
     // Assumes the subscription is funded sufficiently.
-    function requestRandomWords() external onlyOwner returns (uint256) {
+    function requestRandomWords() external onlyOwner {
         // Will revert if subscription is not set and funded.
         uint256 requestId = COORDINATOR.requestRandomWords(
             keyHash,
@@ -66,14 +69,14 @@ contract RandomOracleConsumer is VRFConsumerBaseV2 {
         );
 
         s_requestId = requestId;
-        return requestId;
+        emit RequestComplete(requestId);
     }
 
     function fulfillRandomWords(
-        uint256, /* requestId */
+        uint256 requestId,
         uint256[] memory randomWords
     ) internal override {
-        s_requestIdToRandomWords[s_requestId] = randomWords;
+        s_requestIdToRandomWords[requestId] = randomWords;
     }
 
     function getRandomWords(uint256 requestId)
