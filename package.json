@@ -33,6 +33,7 @@
     "hardhat": "^2.9.5",
     "hardhat-abi-exporter": "^2.9.0",
     "jest": "^28.1.0",
+    "random": "^3.0.6",
     "ts-jest": "^28.0.2",
     "ts-node": "^10.8.0",
     "typechain": "^3.0.0",

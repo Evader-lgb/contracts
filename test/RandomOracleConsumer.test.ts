@@ -1,6 +1,8 @@
 import { expect } from "chai";
 import { Contract, ContractFactory } from "ethers";
 import { ethers } from "hardhat";
+import random from "random";
+const seedRandom = require("seedrandom");
 // 3.指定合约的合约地址
 const contractAddress = "0x046d33a22149857FaAEc9440019D9782a6d138e4";
 // 4.指定合约调用地址和默认调用私钥
@@ -37,5 +39,28 @@ describe("RandomOracleConsumer", function () {
     const s_randomWords = await contract.getRandomWords();
     expect(s_randomWords).to.not.be.empty;
     console.log("s_randomWords", s_randomWords);
+  });
+
+  it("RandomOracleConsumer:Generate seed random number", async function () {
+    const randomSeed = "0x7a1BaC17Ccc5b313516C5E16fb24f7659aA5ebed";
+    let r: number[] = [];
+    for (let i = 0; i < 50; i++) {
+      r.push(random.int(0, 100));
+    }
+    // console.log("r", r);
+
+    //seed random number
+    random.use(seedRandom(randomSeed));
+    r = [];
+    for (let i = 0; i < 50; i++) {
+      r.push(random.int(0, 200));
+    }
+
+    expect(r).to.eql([
+      56, 178, 71, 102, 118, 22, 66, 73, 168, 137, 155, 175, 70, 19, 103, 112,
+      109, 98, 72, 79, 109, 78, 141, 117, 200, 166, 21, 109, 68, 173, 109, 71,
+      133, 161, 114, 89, 21, 142, 1, 57, 176, 77, 179, 91, 195, 153, 138, 136,
+      200, 82,
+    ]);
   });
 });
