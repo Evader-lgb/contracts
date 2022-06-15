@@ -4,7 +4,7 @@ import { ethers } from "hardhat";
 import random from "random";
 const seedRandom = require("seedrandom");
 // 3.指定合约的合约地址
-const contractAddress = "0x8b19c40197961C96EB5a80EaB82317D26852a81d";
+const contractAddress = "0xBbF0F49C890BF86b3de1fBBDFD2B6cd455811a58";
 // 4.指定合约调用地址和默认调用私钥
 const { ALCHEMY_API_TESTNET_URL, PRIVATE_KEY } = process.env;
 
@@ -30,8 +30,22 @@ describe("RandomOracleConsumer", function () {
     const s_requestId = await contract.s_requestId();
     console.log("s_requestId", s_requestId);
   });
+  it("RandomOracleConsumer:Transfer ownership", async function () {
+    let s_randomWords = await contract.getRandomWords(1);
+    expect(s_randomWords).to.be.empty;
+    const [owner, addr1] = await ethers.getSigners();
+    await expect(contract.transferOwnership(addr1.address))
+      .to.emit(contract, "OwnershipTransferred")
+      .withArgs(owner.address, addr1.address);
 
-  it.only("RandomOracleConsumer:Request random number", async function () {
+    await expect(contract.getRandomWords(1)).to.be.revertedWith(
+      "call revert exception"
+    );
+    s_randomWords = contract.connect(addr1).getRandomWords(1);
+    expect(s_randomWords).to.be.empty;
+  });
+
+  it("RandomOracleConsumer:Request random number", async function () {
     const signer = new ethers.Wallet(PRIVATE_KEY as string, provider);
     contract = ContractFactory.attach(contractAddress).connect(signer);
     // await expect(contract.requestRandomWords({
@@ -41,7 +55,7 @@ describe("RandomOracleConsumer", function () {
     console.log("s_requestId", s_requestId);
     const s_randomWords = await contract.getRandomWords(s_requestId.toString());
     expect(s_randomWords).not.to.be.empty;
-    console.log("s_randomWords", s_randomWords);
+    // console.log("s_randomWords", s_randomWords);
   });
 
   it.skip("RandomOracleConsumer:Request random number emit", async function () {

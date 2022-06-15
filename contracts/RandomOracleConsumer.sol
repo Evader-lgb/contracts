@@ -6,8 +6,9 @@ import "hardhat/console.sol";
 
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract RandomOracleConsumer is VRFConsumerBaseV2 {
+contract RandomOracleConsumer is VRFConsumerBaseV2, Ownable {
     VRFCoordinatorV2Interface COORDINATOR;
 
     // 随机数请求完成
@@ -43,7 +44,6 @@ contract RandomOracleConsumer is VRFConsumerBaseV2 {
     mapping(uint256 => uint256[]) s_requestIdToRandomWords;
 
     uint256 public s_requestId;
-    address s_owner;
 
     constructor(
         uint64 subscriptionId,
@@ -52,7 +52,6 @@ contract RandomOracleConsumer is VRFConsumerBaseV2 {
     ) VRFConsumerBaseV2(m_vrfCoordinator) {
         COORDINATOR = VRFCoordinatorV2Interface(m_vrfCoordinator);
         vrfCoordinator = m_vrfCoordinator;
-        s_owner = msg.sender;
         s_subscriptionId = subscriptionId;
         keyHash = m_keyHash;
     }
@@ -72,10 +71,10 @@ contract RandomOracleConsumer is VRFConsumerBaseV2 {
         emit RequestComplete(requestId);
     }
 
-    function fulfillRandomWords(
-        uint256 requestId,
-        uint256[] memory randomWords
-    ) internal override {
+    function fulfillRandomWords(uint256 requestId, uint256[] memory randomWords)
+        internal
+        override
+    {
         s_requestIdToRandomWords[requestId] = randomWords;
     }
 
@@ -86,10 +85,5 @@ contract RandomOracleConsumer is VRFConsumerBaseV2 {
         returns (uint256[] memory)
     {
         return s_requestIdToRandomWords[requestId];
-    }
-
-    modifier onlyOwner() {
-        require(msg.sender == s_owner);
-        _;
     }
 }
