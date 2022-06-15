@@ -1,7 +1,16 @@
 import { Contract } from "ethers";
 import hre, { ethers, upgrades } from "hardhat";
 
-async function _deploy(DeployContractName: string, deployContract: Contract) {
+/**
+ *
+ * @param DeployContractName
+ * @param deployContract
+ * @returns Contract
+ */
+async function _deploy(
+  DeployContractName: string,
+  deployContract: Contract
+): Promise<Contract> {
   // We get the contract to deploy
   console.log("[deploy contract]:deploy [%s] start", DeployContractName);
   const [deployer] = await hre.ethers.getSigners();
@@ -27,15 +36,18 @@ async function _deploy(DeployContractName: string, deployContract: Contract) {
     DeployContractName,
     deployContract.address
   );
-  return deployContract.address;
+  return deployContract;
 }
 /**
  * 部署普通合约(不可升级)
  * @param DeployContractName  contract name
  * @param args  contract args
- * @returns  contract address
+ * @returns  Contract
  */
-export async function deployNormal(DeployContractName: string, ...args: any[]) {
+export async function deployNormal(
+  DeployContractName: string,
+  ...args: any[]
+): Promise<Contract> {
   const DeployContract = await hre.ethers.getContractFactory(
     DeployContractName
   );
@@ -48,7 +60,9 @@ export async function deployNormal(DeployContractName: string, ...args: any[]) {
  * @param contractName  合约名称
  * @returns  合约地址
  */
-export async function deployUpgradeProxy(contractName: string) {
+export async function deployUpgradeProxy(
+  contractName: string
+): Promise<Contract> {
   const DeployContractName = contractName;
   const DeployContract = await hre.ethers.getContractFactory(
     DeployContractName
@@ -65,7 +79,7 @@ export async function deployUpgradeProxy(contractName: string) {
 export async function deployUpgradeUpdate(
   contractName: string,
   contractAddress: string
-) {
+): Promise<Contract> {
   const DeployContractName = contractName;
   const DeployContract = await hre.ethers.getContractFactory(
     DeployContractName
