@@ -6,7 +6,7 @@ const {
   PRIVATE_KEY,
   PRIVATE_KEY_RANDOM_CONSUMER_CONTRACT_CALLER,
 } = process.env;
-describe.only("MacondoTableNFT", function () {
+describe("MacondoTableNFT", function () {
   it("MacondoTableNFT:Deploy Test", async function () {
     const MacondoTableNFT = await ethers.getContractFactory("MacondoTableNFT");
     const macondoTableNFT = await upgrades.deployProxy(MacondoTableNFT);
