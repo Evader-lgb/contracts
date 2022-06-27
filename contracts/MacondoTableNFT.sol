@@ -9,7 +9,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 
-contract MacondoNFT is
+contract MacondoTableNFT is
     Initializable,
     ERC721Upgradeable,
     ERC721URIStorageUpgradeable,
@@ -27,7 +27,7 @@ contract MacondoNFT is
     }
 
     function initialize() public initializer {
-        __ERC721_init("MacondoNFT", "MCD");
+        __ERC721_init("MacondoTableNFT", "NFT-Table");
         __ERC721URIStorage_init();
         __ERC721Burnable_init();
         __Ownable_init();
@@ -35,7 +35,7 @@ contract MacondoNFT is
     }
 
     function _baseURI() internal pure override returns (string memory) {
-        return "https://www.163.com";
+        return "tables-nft-";
     }
 
     function safeMint(address to, string memory uri) public onlyOwner {
