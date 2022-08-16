@@ -28,12 +28,12 @@ npm install --package-lock-only
 contracts/
 ├── contracts          ---合约源代码目录，主要存放 *.sol  /
 │   ├── HelloWorld.sol
-│   └── ...          
+│   └── ...
 ├── scripts            ---js脚本目录，主要存放部署脚本。/
 │   ├── HelloWorld-deploy.js
 │   └── ...
 ├── test               ---合约单元测试目录/
-│   ├── HelloWorld-test.js 
+│   ├── HelloWorld-test.js
 │   └── ...
 ├── hardhat.config.js  ---hardhat配置文件
 ├── package.json
@@ -41,7 +41,7 @@ contracts/
 └── ...
 ```
 
-### env文件说明
+### env 文件说明
 
 ```env
 #ALCHEMY API地址
@@ -60,10 +60,14 @@ Running Test Locally (Recommend)
 npx hardhat test
 ```
 
+```shell
+npx hardhat test --grep one
+```
+
 Running Test On Polygon Testnet
 
 ```shell
-npx hardhat test --network mumbai 
+npx hardhat test --network mumbai
 ```
 
 ## 部署
@@ -71,18 +75,18 @@ npx hardhat test --network mumbai
 ### 部署合约到测试网络 or 正式网络
 
 ```shell
-npx hardhat run scripts/HelloWorld-deploy.ts --network mumbai 
+npx hardhat run scripts/HelloWorld-deploy.ts --network mumbai
 ```
 
 ### 记录合约部署后的地址
 
 ```shell
-HelloWorld deployed to:0x3F0528D040f31ace17a0c733469145928b9C88a4 
+HelloWorld deployed to:0x3F0528D040f31ace17a0c733469145928b9C88a4
 ```
 
 记录其中的 `0x3F0528D040f31ace17a0c733469145928b9C88a4` 到任意你喜欢的地方,方便 `game-service-contract` 服务调用.
 
-### 编译合约ABI
+### 编译合约 ABI
 
 ```shell
 npm run compile
