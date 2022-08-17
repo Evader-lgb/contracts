@@ -62,7 +62,7 @@ describe('RandomOracleConsumer', function () {
     if (s_requestId.eq(0)) {
       await expect(
         contract.requestRandomWords({
-          gasLimit: 100000,
+          gasLimit: 300000,
         })
       ).to.emit(contract, 'RequestComplete');
       s_requestId = await contract.s_requestId();
