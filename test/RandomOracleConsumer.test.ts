@@ -82,11 +82,26 @@ describe('RandomOracleConsumer', function () {
       provider
     );
     contract = ContractFactory.attach(contractAddress).connect(signer);
+    const balanceBefore = await signer.getBalance();
     await expect(
       contract.requestRandomWords({
         gasLimit: 300000,
       })
     ).to.emit(contract, 'RequestComplete');
+
+    const balanceAfter = await signer.getBalance();
+
+    console.log(
+      `gas fee:`,
+      ethers.utils.formatEther(balanceBefore.sub(balanceAfter))
+    );
+    //gas fee: 0.000784718
+
+    //测试网随机数成本测试,1个随机数成本 约等于 0.2373U
+    //计算方式:
+    //每一个随机数的成本:0.025 LINK+0.00008 BNB
+    //按照 1LINK=8.5U  1BNB=310U计算
+    //8.5 * 0.025 + 310 * 0.00008 = 0.2125 + 0.0248 = 0.2373 U
   });
 
   it('RandomOracleConsumer:Generate seed random number', async function () {
