@@ -36,7 +36,7 @@ describe('TokenTransfer', function () {
     //transfer signer 5 usdt
     await macondoUSDT.transfer(signer.address, ethers.utils.parseEther('5'));
 
-    const result = await USDTContract.connect(signer).approve(
+    await USDTContract.connect(signer).approve(
       tokenTransfer.address,
       ethers.utils.parseEther('1')
     );
@@ -76,6 +76,13 @@ describe('TokenTransfer', function () {
 
     const [owner, addr1] = await ethers.getSigners();
     const signer = new ethers.Wallet(PRIVATE_KEY as string, owner.provider);
+    //transfer signer gas fee
+    await owner.sendTransaction({
+      to: signer.address,
+      value: ethers.utils.parseEther('5'),
+    });
+    //transfer signer 5 usdt
+    await macondoUSDT.transfer(signer.address, ethers.utils.parseEther('5'));
 
     //provider on transfer event
     const filter = {
