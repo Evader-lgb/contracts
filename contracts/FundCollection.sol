@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "hardhat/console.sol";
 
 contract FundCollectorMacondoUSDT {
-    address token = 0x5ebED46E2534084f61c1407782DEc04E1395eCc9;
+    address token = 0x3F0528D040f31ace17a0c733469145928b9C88a4;
     address hotWallet = 0x52830f99820f80ED2513Cd0bdA155F96Cc8aAed3;
 
     event Complete(address sender, uint256 amount);

@@ -7,8 +7,8 @@
 import { deployUpgradeProxy, deployUpgradeUpdate } from './utils/deploy.util';
 
 async function main() {
-  const contractAddress = null;
-  // const contractAddress = "0x33E7FB51160499a6D009BD504E25cc827BfB5e28";
+  // const contractAddress = null;
+  const contractAddress = '0x0608F91AD2016Cf80749AE14f5E825a47fef8899';
   if (contractAddress) {
     await deployUpgradeUpdate('FundCollection', contractAddress);
   } else {

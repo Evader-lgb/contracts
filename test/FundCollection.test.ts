@@ -12,6 +12,33 @@ describe('FundCollection', function () {
 
     console.log('address', address);
   });
+  it.only('FundCollection:Deploy InitCode', async function () {
+    const FundCollection = await ethers.getContractFactory('FundCollection');
+    const fundCollection = await FundCollection.deploy();
+    const address = await (await fundCollection.deployed()).address;
+    expect(ethers.utils.isAddress(address)).to.be.true;
+
+    console.log('address', address);
+
+    const TokenAddress = '0x3F0528D040f31ace17a0c733469145928b9C88a4';
+    const fundCollectorMacondoUSDTByteCode =
+      await fundCollection.getCreationByteCode(
+        TokenAddress,
+        '0x52830f99820f80ED2513Cd0bdA155F96Cc8aAed3'
+      );
+    console.log(
+      'fundCollectorMacondoUSDTByteCode',
+      fundCollectorMacondoUSDTByteCode
+    );
+    const fundCollectorMacondoUSDTInitCode = ethers.utils.keccak256(
+      fundCollectorMacondoUSDTByteCode
+    );
+
+    console.log(
+      'fundCollectorMacondoUSDTInitCode',
+      fundCollectorMacondoUSDTInitCode
+    );
+  });
 
   it('FundCollection:Deploy Upgrade Test', async function () {
     const FundCollection = await ethers.getContractFactory('FundCollection');
