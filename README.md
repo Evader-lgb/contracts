@@ -78,6 +78,10 @@ npx hardhat test --network mumbai
 npx hardhat run scripts/HelloWorld-deploy.ts --network mumbai
 ```
 
+```shell
+npx hardhat run scripts/HelloWorld-deploy.ts --network bsc_testnet
+```
+
 ### 记录合约部署后的地址
 
 ```shell
