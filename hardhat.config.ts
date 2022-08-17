@@ -38,12 +38,6 @@ module.exports = {
       url: ALCHEMY_API_TESTNET_URL,
       accounts: [`0x${PRIVATE_KEY}`],
     },
-    hardhat: {
-      forking: {
-        url: ALCHEMY_API_TESTNET_URL,
-        blockNumber: env_blockNumber,
-      },
-    },
   },
   mocha: {
     timeout: 2 * 60 * 1000,

@@ -5,12 +5,14 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "hardhat/console.sol";
 
 contract FundCollectorMacondoUSDT {
-    address internal token = 0x4Ea9C43e09A51ba39a31a29f2b7494F60C766E66;
-    address internal hotWallet = 0x52830f99820f80ED2513Cd0bdA155F96Cc8aAed3;
+    address token = 0x5ebED46E2534084f61c1407782DEc04E1395eCc9;
+    address hotWallet = 0x52830f99820f80ED2513Cd0bdA155F96Cc8aAed3;
 
     event Complete(address sender, uint256 amount);
 
-    constructor() {
+    constructor(address _token, address _hotWallet) {
+        token = _token;
+        hotWallet = _hotWallet;
         // send all tokens from this contract to hotwallet
         IERC20(token).transfer(
             hotWallet,
@@ -25,6 +27,16 @@ contract FundCollectorMacondoUSDT {
 contract FundCollection {
     event Deployed(address addr, uint256 salt);
 
+    function getCreationByteCode(address _token, address _hotWallet)
+        public
+        pure
+        returns (bytes memory)
+    {
+        bytes memory bytecode = type(FundCollectorMacondoUSDT).creationCode;
+
+        return abi.encodePacked(bytecode, abi.encode(_token, _hotWallet));
+    }
+
     function createFundCollectionMacondoUSDT(uint256 salt) public {
         //get FundCollectorMacondoUSDT init_code
         bytes memory bytecode = type(FundCollectorMacondoUSDT).creationCode;
@@ -34,7 +46,25 @@ contract FundCollection {
             newAddr := create2(0, add(bytecode, 32), codeSize, salt)
         }
 
-        console.log("deloy factory contract addresss: ", newAddr);
+        console.log(
+            "createFundCollectionMacondoUSDT:deloy factory contract addresss: ",
+            newAddr
+        );
+        emit Deployed(newAddr, salt);
+    }
+
+    function createFundCollection(bytes memory bytecode, uint256 salt) public {
+        //get FundCollectorMacondoUSDT init_code
+        address newAddr;
+        assembly {
+            let codeSize := mload(bytecode)
+            newAddr := create2(0, add(bytecode, 32), codeSize, salt)
+        }
+
+        console.log(
+            "createFundCollection:deloy factory contract addresss: ",
+            newAddr
+        );
         emit Deployed(newAddr, salt);
     }
 }
