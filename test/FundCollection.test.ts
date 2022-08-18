@@ -12,7 +12,7 @@ describe('FundCollection', function () {
 
     console.log('address', address);
   });
-  it.only('FundCollection:Deploy InitCode', async function () {
+  it('FundCollection:Deploy InitCode', async function () {
     const FundCollection = await ethers.getContractFactory('FundCollection');
     const fundCollection = await FundCollection.deploy();
     const address = await (await fundCollection.deployed()).address;
@@ -20,7 +20,7 @@ describe('FundCollection', function () {
 
     console.log('address', address);
 
-    const TokenAddress = '0x3F0528D040f31ace17a0c733469145928b9C88a4';
+    const TokenAddress = '0x5ebED46E2534084f61c1407782DEc04E1395eCc9';
     const fundCollectorMacondoUSDTByteCode =
       await fundCollection.getCreationByteCode(
         TokenAddress,
