@@ -9,7 +9,7 @@ const { PRIVATE_KEY_RANDOM_CONSUMER_CONTRACT_CALLER } = process.env;
 
 async function main() {
   // const contractAddress = null;
-  const contractAddress = '0x4E14f203e42164684C763cb534d0027bD7E87b5A';
+  const contractAddress = '0x8706b341A1678a1a7A2971C995CABB761752c9DB';
   if (contractAddress) {
     const contract = await deployUpgradeUpdate(
       'MacondoTableNFT',
