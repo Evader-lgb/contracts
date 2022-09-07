@@ -35,7 +35,7 @@ contract MacondoTableNFT is
     }
 
     function _baseURI() internal pure override returns (string memory) {
-        return "tables-nft-";
+        return "";
     }
 
     function safeMint(address to, string memory uri) public onlyOwner {
