@@ -2,20 +2,18 @@
 pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721BurnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 
 contract MacondoTableNFT is
     Initializable,
     ERC721Upgradeable,
+    ERC721EnumerableUpgradeable,
     ERC721URIStorageUpgradeable,
-    ERC721BurnableUpgradeable,
-    OwnableUpgradeable,
-    UUPSUpgradeable
+    OwnableUpgradeable
 {
     using CountersUpgradeable for CountersUpgradeable.Counter;
 
@@ -27,15 +25,10 @@ contract MacondoTableNFT is
     }
 
     function initialize() public initializer {
-        __ERC721_init("MacondoTableNFT", "NFT-Table");
+        __ERC721_init("MacondoTableNFT", "MCT");
+        __ERC721Enumerable_init();
         __ERC721URIStorage_init();
-        __ERC721Burnable_init();
         __Ownable_init();
-        __UUPSUpgradeable_init();
-    }
-
-    function _baseURI() internal pure override returns (string memory) {
-        return "";
     }
 
     function safeMint(address to, string memory uri) public onlyOwner {
@@ -45,13 +38,15 @@ contract MacondoTableNFT is
         _setTokenURI(tokenId, uri);
     }
 
-    function _authorizeUpgrade(address newImplementation)
-        internal
-        override
-        onlyOwner
-    {}
-
     // The following functions are overrides required by Solidity.
+
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) internal override(ERC721Upgradeable, ERC721EnumerableUpgradeable) {
+        super._beforeTokenTransfer(from, to, tokenId);
+    }
 
     function _burn(uint256 tokenId)
         internal
@@ -67,5 +62,14 @@ contract MacondoTableNFT is
         returns (string memory)
     {
         return super.tokenURI(tokenId);
+    }
+
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        override(ERC721Upgradeable, ERC721EnumerableUpgradeable)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
     }
 }
