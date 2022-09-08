@@ -6,7 +6,6 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721Enumer
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 
 contract MacondoTableNFT is
     Initializable,
@@ -15,10 +14,6 @@ contract MacondoTableNFT is
     ERC721URIStorageUpgradeable,
     OwnableUpgradeable
 {
-    using CountersUpgradeable for CountersUpgradeable.Counter;
-
-    CountersUpgradeable.Counter private _tokenIdCounter;
-
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
         _disableInitializers();
@@ -31,9 +26,11 @@ contract MacondoTableNFT is
         __Ownable_init();
     }
 
-    function safeMint(address to, string memory uri) public onlyOwner {
-        uint256 tokenId = _tokenIdCounter.current();
-        _tokenIdCounter.increment();
+    function safeMint(
+        address to,
+        uint256 tokenId,
+        string memory uri
+    ) public onlyOwner {
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
     }

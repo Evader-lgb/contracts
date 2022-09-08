@@ -13,7 +13,7 @@ const {
 
 async function main() {
   // const contractAddress = null;
-  const contractAddress = '0x07DDD08CC777D15ABDf796DfE7924494d97ec9fC';
+  const contractAddress = '0x273a7ce03D2B00afde547830a1B38E616081C992';
   const DeployContractName = 'MacondoTableNFT';
   if (contractAddress) {
     const contract = await deployUpgradeUpdate(
