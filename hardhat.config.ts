@@ -42,4 +42,7 @@ module.exports = {
   mocha: {
     timeout: 2 * 60 * 1000,
   },
+  abiExporter: {
+    except: ['sample'],
+  },
 };

@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { randomInt } from 'crypto';
 import { ethers, upgrades } from 'hardhat';
 
 describe('MacondoTableNFT', function () {
@@ -9,7 +10,7 @@ describe('MacondoTableNFT', function () {
     expect(ethers.utils.isAddress(address)).to.be.true;
 
     expect(await macondoTableNFT.name()).to.equal('MacondoTableNFT');
-    expect(await macondoTableNFT.symbol()).to.equal('NFT-Table');
+    expect(await macondoTableNFT.symbol()).to.equal('MCT');
   });
 
   it('MacondoTableNFT:SafeMin', async function () {
@@ -21,8 +22,8 @@ describe('MacondoTableNFT', function () {
     const baseURI = '';
     const toAddress = '0x74D748501728cAc09f4b6bc9c989E1854e0af7Df';
 
-    const tokenId = 0;
-    await expect(macondoTableNFT.safeMint(toAddress, uri))
+    const tokenId = randomInt(10000);
+    await expect(macondoTableNFT.safeMint(toAddress, tokenId, uri))
       .to.emit(macondoTableNFT, 'Transfer')
       .withArgs(ethers.constants.AddressZero, toAddress, tokenId);
 
