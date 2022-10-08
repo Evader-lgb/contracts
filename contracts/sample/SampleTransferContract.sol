@@ -8,6 +8,8 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
+import "@openzeppelin/contracts/finance/PaymentSplitter.sol";
+
 contract SampleTransferContract is Pausable, Ownable {
     //token amount
     uint256 private _tokenAmount;
