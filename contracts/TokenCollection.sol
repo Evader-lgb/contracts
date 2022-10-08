@@ -12,12 +12,12 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 contract TokenCollection is AccessControl {
     event TokenReceived(address from, uint256 amount);
     event Withdraw(address to, uint256 amount);
-    event ERC20Withdrawn(
+    event ERC20Withdraw(
         IERC20 indexed token,
         address indexed to,
         uint256 amount
     );
-    event ERC721Withdrawn(
+    event ERC721Withdraw(
         IERC721 indexed token,
         address indexed to,
         uint256 tokenId
@@ -50,7 +50,7 @@ contract TokenCollection is AccessControl {
         uint256 value
     ) public onlyRole(WITHDRAW_ERC20) {
         SafeERC20.safeTransfer(token, to, value);
-        emit ERC20Withdrawn(token, to, value);
+        emit ERC20Withdraw(token, to, value);
     }
 
     function withdrawERC721(
@@ -59,6 +59,6 @@ contract TokenCollection is AccessControl {
         uint256 tokenId
     ) public onlyRole(WITHDRAW_ERC721) {
         token.safeTransferFrom(address(this), to, tokenId);
-        emit ERC721Withdrawn(token, to, tokenId);
+        emit ERC721Withdraw(token, to, tokenId);
     }
 }
