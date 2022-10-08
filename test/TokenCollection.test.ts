@@ -1,14 +1,14 @@
 import { expect } from 'chai';
 import { randomInt } from 'crypto';
 import { Contract } from 'ethers';
-import { ethers } from 'hardhat';
+import { ethers, upgrades } from 'hardhat';
 
 describe('Contract TokenCollection', function () {
   let contract: Contract;
 
   beforeEach(async function () {
     const TokenCollection = await ethers.getContractFactory('TokenCollection');
-    contract = await TokenCollection.deploy();
+    contract = await upgrades.deployProxy(TokenCollection, []);
     await contract.deployed();
   });
 
@@ -98,9 +98,9 @@ describe('Contract TokenCollection', function () {
     });
   });
 
-  it.skip('TokenCollection Transfer And withdraw ERC721 Test', async function () {
+  it('TokenCollection Transfer And withdraw ERC721 Test', async function () {
     const MacondoNFT = await ethers.getContractFactory('MacondoTableNFT');
-    const macondoNFT = await MacondoNFT.deploy();
+    const macondoNFT = await upgrades.deployProxy(MacondoNFT);
     await macondoNFT.deployed();
 
     const [owner, addr1, addr2, addr3] = await ethers.getSigners();
@@ -108,30 +108,31 @@ describe('Contract TokenCollection', function () {
 
     const uri =
       'https://ipfs.filebase.io/ipfs/QmeNbXJvrXS8MwSV6zMoQQFey46dM4WqDR5NLnC5Qi24GU';
-    const baseURI = '';
-    const toAddress = '0x74D748501728cAc09f4b6bc9c989E1854e0af7Df';
 
     const tokenId = randomInt(10000);
-
-    await macondoNFT.safeMint(addr1.address, 1);
+    await macondoNFT.safeMint(addr1.address, tokenId, uri);
 
     await macondoNFT
       .connect(addr1)
-      .transferFrom(addr1.address, contract.address, 1);
+      .transferFrom(addr1.address, contract.address, tokenId);
 
     await macondoNFT.balanceOf(contract.address).then((balance: string) => {
       expect(balance).to.equal('1');
     });
 
     await expect(
-      contract.withdrawERC721(macondoNFT.address, addr1.address, 1)
+      contract.withdrawERC721(macondoNFT.address, addr1.address, tokenId)
     ).to.revertedWith(
-      'AccessControl: account 0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266 is missing role 0x4b9d9b9e9c4e4e4f1b3e7b3d1c3d1c3d1c3d1c3d1c3d1c3d1c3d1c3d1c3d1c3d'
+      'AccessControl: account 0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266 is missing role 0xb5aa82721752f7d9fd086b2cd0b25a64b0fb9143afee5faf5191cb2903462466'
     );
 
-    await contract
-      .connect(addr3)
-      .withdrawERC721(macondoNFT.address, addr1.address, 1);
+    await expect(
+      contract
+        .connect(addr3)
+        .withdrawERC721(macondoNFT.address, addr1.address, tokenId)
+    )
+      .emit(contract, 'ERC721Withdraw')
+      .withArgs(macondoNFT.address, addr1.address, tokenId);
 
     await macondoNFT.balanceOf(contract.address).then((balance: string) => {
       expect(balance).to.equal('0');

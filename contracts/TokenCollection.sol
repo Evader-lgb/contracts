@@ -1,24 +1,25 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
-import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/utils/Address.sol";
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 /**
  * @title ERC20 Token with control over token transfers
  */
-contract TokenCollection is AccessControl {
+contract TokenCollection is Initializable, AccessControlUpgradeable {
     event TokenReceived(address from, uint256 amount);
     event Withdraw(address to, uint256 amount);
     event ERC20Withdraw(
-        IERC20 indexed token,
+        IERC20Upgradeable indexed token,
         address indexed to,
         uint256 amount
     );
     event ERC721Withdraw(
-        IERC721 indexed token,
+        IERC721Upgradeable indexed token,
         address indexed to,
         uint256 tokenId
     );
@@ -27,9 +28,15 @@ contract TokenCollection is AccessControl {
     bytes32 public constant WITHDRAW_ERC20 = keccak256("WITHDRAW_ERC20");
     bytes32 public constant WITHDRAW_ERC721 = keccak256("WITHDRAW_ERC721");
 
+    /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
-        // Grant the minter role to a specified account
-        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _disableInitializers();
+    }
+
+    function initialize() public initializer {
+        __AccessControl_init();
+
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
     receive() external payable virtual {
@@ -40,21 +47,21 @@ contract TokenCollection is AccessControl {
         public
         onlyRole(WITHDRAW)
     {
-        Address.sendValue(to, amount);
+        AddressUpgradeable.sendValue(to, amount);
         emit Withdraw(to, amount);
     }
 
     function withdrawERC20(
-        IERC20 token,
+        IERC20Upgradeable token,
         address to,
         uint256 value
     ) public onlyRole(WITHDRAW_ERC20) {
-        SafeERC20.safeTransfer(token, to, value);
+        SafeERC20Upgradeable.safeTransfer(token, to, value);
         emit ERC20Withdraw(token, to, value);
     }
 
     function withdrawERC721(
-        IERC721 token,
+        IERC721Upgradeable token,
         address to,
         uint256 tokenId
     ) public onlyRole(WITHDRAW_ERC721) {
