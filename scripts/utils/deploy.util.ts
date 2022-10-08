@@ -1,5 +1,5 @@
-import { Contract } from "ethers";
-import hre, { ethers, upgrades } from "hardhat";
+import { Contract } from 'ethers';
+import hre, { ethers, upgrades } from 'hardhat';
 
 /**
  *
@@ -12,27 +12,27 @@ async function _deploy(
   deployContract: Contract
 ): Promise<Contract> {
   // We get the contract to deploy
-  console.log("[deploy contract]:deploy [%s] start", DeployContractName);
+  console.log('[deploy contract]:deploy [%s] start', DeployContractName);
   const [deployer] = await hre.ethers.getSigners();
-  console.log("[deploy contract]:deployer address", deployer.address);
+  console.log('[deploy contract]:deployer address', deployer.address);
   const deployerBalance = await deployer.getBalance();
   console.log(
-    "[deploy contract]:deployer balance before",
-    deployerBalance.toString()
+    '[deploy contract]:deployer balance before',
+    hre.ethers.utils.formatEther(deployerBalance)
   );
   await deployContract.deployed();
 
   const deployerBalanceAfter = await deployer.getBalance();
   console.log(
-    "[deploy contract]:deployer balance after",
-    deployerBalanceAfter.toString()
+    '[deploy contract]:deployer balance after',
+    hre.ethers.utils.formatEther(deployerBalanceAfter)
   );
   console.log(
-    "[deploy contract]:deploy gas fee",
+    '[deploy contract]:deploy gas fee',
     ethers.utils.formatEther(deployerBalance.sub(deployerBalanceAfter))
   );
   console.log(
-    "[deploy contract]:deploy contract: [%s] complete! address %s",
+    '[deploy contract]:deploy contract: [%s] complete! address %s',
     DeployContractName,
     deployContract.address
   );
