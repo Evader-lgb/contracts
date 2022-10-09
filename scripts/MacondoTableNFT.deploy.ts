@@ -7,13 +7,16 @@
 import { ethers } from 'ethers';
 import { deployUpgradeProxy, deployUpgradeUpdate } from './utils/deploy.util';
 const {
-  BSC_CONTRACT_MacondoTableNFTOwnerAddress,
+  CONTRACT_DEFAULT_CALLER_ADDRESS,
   PRIVATE_KEY_RANDOM_CONSUMER_CONTRACT_CALLER,
 } = process.env;
 
 async function main() {
   // const contractAddress = null;
-  const contractAddress = '0x273a7ce03D2B00afde547830a1B38E616081C992';
+  //old nft contract address
+  // const contractAddress = '0x273a7ce03D2B00afde547830a1B38E616081C992';
+  //new nft contract address
+  const contractAddress = '0x6B787c496fCdff692de5723048d5e196AdF3eEEE';
   const DeployContractName = 'MacondoTableNFT';
   if (contractAddress) {
     const contract = await deployUpgradeUpdate(
@@ -29,11 +32,11 @@ async function main() {
   } else {
     const contract = await deployUpgradeProxy(DeployContractName);
 
-    const newOwnerAddress = ethers.utils.computeAddress(
-      PRIVATE_KEY_RANDOM_CONSUMER_CONTRACT_CALLER as string
+    //grant minter role to caller
+    await contract.grantRole(
+      ethers.utils.id('MINTER_ROLE'),
+      CONTRACT_DEFAULT_CALLER_ADDRESS
     );
-    console.log('MacondoTableNFT new Owner Address', newOwnerAddress);
-    await contract.transferOwnership(newOwnerAddress);
   }
 }
 

@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import { randomInt } from 'crypto';
 import { Contract } from 'ethers';
 import { ethers, upgrades } from 'hardhat';
 
@@ -109,8 +108,8 @@ describe('Contract TokenCollection', function () {
     const uri =
       'https://ipfs.filebase.io/ipfs/QmeNbXJvrXS8MwSV6zMoQQFey46dM4WqDR5NLnC5Qi24GU';
 
-    const tokenId = randomInt(10000);
-    await macondoNFT.safeMint(addr1.address, tokenId, uri);
+    const tokenId = '0';
+    await macondoNFT.safeMint(addr1.address, uri);
 
     await macondoNFT
       .connect(addr1)

@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import { randomInt } from 'crypto';
 import { ethers, upgrades } from 'hardhat';
 
 describe('MacondoTableNFT', function () {
@@ -22,12 +21,36 @@ describe('MacondoTableNFT', function () {
     const baseURI = '';
     const toAddress = '0x74D748501728cAc09f4b6bc9c989E1854e0af7Df';
 
-    const tokenId = randomInt(10000);
-    await expect(macondoTableNFT.safeMint(toAddress, tokenId, uri))
-      .to.emit(macondoTableNFT, 'Transfer')
-      .withArgs(ethers.constants.AddressZero, toAddress, tokenId);
+    //grant role
+    const [owner, addr1, addr2, addr3] = await ethers.getSigners();
+    await macondoTableNFT.grantRole(
+      ethers.utils.id('MINTER_ROLE'),
+      owner.address
+    );
 
-    const tokenURI = await macondoTableNFT.tokenURI(tokenId);
+    await expect(macondoTableNFT.safeMint(toAddress, uri)).to.emit(
+      macondoTableNFT,
+      'Transfer'
+    );
+
+    const tokenURI = await macondoTableNFT.tokenURI('0');
     expect(tokenURI).to.equal(`${baseURI}${uri}`);
+  });
+
+  it('MacondoTableNFT:pause test', async function () {
+    const MacondoTableNFT = await ethers.getContractFactory('MacondoTableNFT');
+    const macondoTableNFT = await upgrades.deployProxy(MacondoTableNFT);
+
+    const uri =
+      'https://ipfs.filebase.io/ipfs/QmeNbXJvrXS8MwSV6zMoQQFey46dM4WqDR5NLnC5Qi24GU';
+    const baseURI = '';
+    const toAddress = '0x74D748501728cAc09f4b6bc9c989E1854e0af7Df';
+
+    //pause
+    await macondoTableNFT.pause();
+
+    await expect(macondoTableNFT.safeMint(toAddress, uri)).revertedWith(
+      'Pausable: paused'
+    );
   });
 });

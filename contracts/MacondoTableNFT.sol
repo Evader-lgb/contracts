@@ -4,16 +4,25 @@ pragma solidity ^0.8.4;
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 
 contract MacondoTableNFT is
     Initializable,
     ERC721Upgradeable,
     ERC721EnumerableUpgradeable,
     ERC721URIStorageUpgradeable,
-    OwnableUpgradeable
+    PausableUpgradeable,
+    AccessControlUpgradeable
 {
+    using CountersUpgradeable for CountersUpgradeable.Counter;
+
+    bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+    CountersUpgradeable.Counter private _tokenIdCounter;
+
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
         _disableInitializers();
@@ -23,14 +32,28 @@ contract MacondoTableNFT is
         __ERC721_init("MacondoTableNFT", "MCT");
         __ERC721Enumerable_init();
         __ERC721URIStorage_init();
-        __Ownable_init();
+        __Pausable_init();
+        __AccessControl_init();
+
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _grantRole(PAUSER_ROLE, msg.sender);
+        _grantRole(MINTER_ROLE, msg.sender);
     }
 
-    function safeMint(
-        address to,
-        uint256 tokenId,
-        string memory uri
-    ) public onlyOwner {
+    function pause() public onlyRole(PAUSER_ROLE) {
+        _pause();
+    }
+
+    function unpause() public onlyRole(PAUSER_ROLE) {
+        _unpause();
+    }
+
+    function safeMint(address to, string memory uri)
+        public
+        onlyRole(MINTER_ROLE)
+    {
+        uint256 tokenId = _tokenIdCounter.current();
+        _tokenIdCounter.increment();
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
     }
@@ -41,7 +64,11 @@ contract MacondoTableNFT is
         address from,
         address to,
         uint256 tokenId
-    ) internal override(ERC721Upgradeable, ERC721EnumerableUpgradeable) {
+    )
+        internal
+        override(ERC721Upgradeable, ERC721EnumerableUpgradeable)
+        whenNotPaused
+    {
         super._beforeTokenTransfer(from, to, tokenId);
     }
 
@@ -64,7 +91,11 @@ contract MacondoTableNFT is
     function supportsInterface(bytes4 interfaceId)
         public
         view
-        override(ERC721Upgradeable, ERC721EnumerableUpgradeable)
+        override(
+            ERC721Upgradeable,
+            ERC721EnumerableUpgradeable,
+            AccessControlUpgradeable
+        )
         returns (bool)
     {
         return super.supportsInterface(interfaceId);

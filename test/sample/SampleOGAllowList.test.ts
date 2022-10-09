@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import { randomInt } from 'crypto';
 import { Contract } from 'ethers';
 import { ethers, upgrades } from 'hardhat';
 
@@ -26,8 +25,7 @@ describe('SampleOGAllowList', () => {
       'https://ipfs.filebase.io/ipfs/QmeNbXJvrXS8MwSV6zMoQQFey46dM4WqDR5NLnC5Qi24GU';
 
     //send og to addr1
-    const tokenId = randomInt(10000);
-    await macondoNFT.safeMint(addr1.address, tokenId, uri);
+    await macondoNFT.safeMint(addr1.address, uri);
 
     await expect(contract.preSale()).to.revertedWith('OG Allow List: Not OG');
     await contract.connect(addr1).preSale();
