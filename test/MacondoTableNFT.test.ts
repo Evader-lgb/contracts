@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { randomInt } from 'crypto';
 import { ethers, upgrades } from 'hardhat';
 
 describe('MacondoTableNFT', function () {
@@ -28,12 +29,13 @@ describe('MacondoTableNFT', function () {
       owner.address
     );
 
-    await expect(macondoTableNFT.safeMint(toAddress, uri)).to.emit(
+    const tokenId = randomInt(1000000);
+    await expect(macondoTableNFT.safeMint(toAddress, tokenId, uri)).to.emit(
       macondoTableNFT,
       'Transfer'
     );
 
-    const tokenURI = await macondoTableNFT.tokenURI('0');
+    const tokenURI = await macondoTableNFT.tokenURI(tokenId);
     expect(tokenURI).to.equal(`${baseURI}${uri}`);
   });
 
@@ -45,12 +47,13 @@ describe('MacondoTableNFT', function () {
       'https://ipfs.filebase.io/ipfs/QmeNbXJvrXS8MwSV6zMoQQFey46dM4WqDR5NLnC5Qi24GU';
     const baseURI = '';
     const toAddress = '0x74D748501728cAc09f4b6bc9c989E1854e0af7Df';
+    const tokenId = randomInt(1000000);
 
     //pause
     await macondoTableNFT.pause();
 
-    await expect(macondoTableNFT.safeMint(toAddress, uri)).revertedWith(
-      'Pausable: paused'
-    );
+    await expect(
+      macondoTableNFT.safeMint(toAddress, tokenId, uri)
+    ).revertedWith('Pausable: paused');
   });
 });

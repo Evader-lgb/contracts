@@ -7,7 +7,6 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URISto
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 
 contract MacondoTableNFT is
     Initializable,
@@ -17,11 +16,8 @@ contract MacondoTableNFT is
     PausableUpgradeable,
     AccessControlUpgradeable
 {
-    using CountersUpgradeable for CountersUpgradeable.Counter;
-
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-    CountersUpgradeable.Counter private _tokenIdCounter;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -48,12 +44,11 @@ contract MacondoTableNFT is
         _unpause();
     }
 
-    function safeMint(address to, string memory uri)
-        public
-        onlyRole(MINTER_ROLE)
-    {
-        uint256 tokenId = _tokenIdCounter.current();
-        _tokenIdCounter.increment();
+    function safeMint(
+        address to,
+        uint256 tokenId,
+        string memory uri
+    ) public onlyRole(MINTER_ROLE) {
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
     }
