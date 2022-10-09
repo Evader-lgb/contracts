@@ -6,11 +6,16 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeab
 import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/utils/ERC721HolderUpgradeable.sol";
 
 /**
  * @title ERC20 Token with control over token transfers
  */
-contract TokenCollection is Initializable, AccessControlUpgradeable {
+contract TokenCollection is
+    Initializable,
+    AccessControlUpgradeable,
+    ERC721HolderUpgradeable
+{
     event TokenReceived(address from, uint256 amount);
     event Withdraw(address to, uint256 amount);
     event ERC20Withdraw(
@@ -35,6 +40,7 @@ contract TokenCollection is Initializable, AccessControlUpgradeable {
 
     function initialize() public initializer {
         __AccessControl_init();
+        __ERC721Holder_init();
 
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
