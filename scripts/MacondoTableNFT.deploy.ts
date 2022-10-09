@@ -12,11 +12,11 @@ const {
 } = process.env;
 
 async function main() {
-  const contractAddress = null;
+  // const contractAddress = null;
   //old nft contract address
   // const contractAddress = '0x273a7ce03D2B00afde547830a1B38E616081C992';
   //new nft contract address
-  // const contractAddress = '0x1A516d0E324575Fd6BdD2E54FB9cFcB6C8F3e7A4';
+  const contractAddress = '0x1A516d0E324575Fd6BdD2E54FB9cFcB6C8F3e7A4';
 
   const DeployContractName = 'MacondoTableNFT';
   if (contractAddress) {
