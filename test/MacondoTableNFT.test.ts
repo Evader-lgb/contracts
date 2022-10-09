@@ -17,9 +17,8 @@ describe('MacondoTableNFT', function () {
     const MacondoTableNFT = await ethers.getContractFactory('MacondoTableNFT');
     const macondoTableNFT = await upgrades.deployProxy(MacondoTableNFT);
 
-    const uri =
-      'https://ipfs.filebase.io/ipfs/QmeNbXJvrXS8MwSV6zMoQQFey46dM4WqDR5NLnC5Qi24GU';
-    const baseURI = '';
+    const uri = 'meta/desk-deskIdABCD-10009292';
+    const baseURI = 'https://macondo-nft-storage.s3.us-west-1.amazonaws.com/';
     const toAddress = '0x74D748501728cAc09f4b6bc9c989E1854e0af7Df';
 
     //grant role
