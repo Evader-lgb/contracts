@@ -10,7 +10,7 @@ async function main() {
   const DeployContractName = 'MacondoMCD';
 
   // const contractAddress = null;
-  const contractAddress = '0xbEa921D1a3625487BED6073cb981cc06f56Ed454';
+  const contractAddress = '0xd0D3D7F1407eADd14621Aa5778c16738edEE39bd';
   if (contractAddress) {
     await deployUpgradeUpdate(DeployContractName, contractAddress);
   } else {
