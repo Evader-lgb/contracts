@@ -1,29 +1,18 @@
 // We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// When running the script with `npx hardhat run <script>` you'll find the Hardhat
-// Runtime Environment's members available in the global scope.
-// const hre = require("hardhat");
-import hre from 'hardhat';
+
+import { deployUpgradeProxy, deployUpgradeUpdate } from './utils/deploy.util';
 
 async function main() {
-  // Hardhat always runs the compile task when running scripts with its command
-  // line interface.
-  //
-  // If this script is run directly using `node` you may want to call compile
-  // manually to make sure everything is compiled
-  // await hre.run('compile');
-
   // We get the contract to deploy
   const DeployContractName = 'MacondoBFB';
-  const DeployContract = await hre.ethers.getContractFactory(
-    DeployContractName
-  );
-  const deployContract = await DeployContract.deploy();
 
-  await deployContract.deployed();
-
-  console.log('%s deployed to:%s', DeployContractName, deployContract.address);
+  // const contractAddress = null;
+  const contractAddress = '0x142FDB4C5B01486f4526744668aEDf574ab045DB';
+  if (contractAddress) {
+    await deployUpgradeUpdate(DeployContractName, contractAddress);
+  } else {
+    await deployUpgradeProxy(DeployContractName);
+  }
 }
 
 // We recommend this pattern to be able to use async/await everywhere
