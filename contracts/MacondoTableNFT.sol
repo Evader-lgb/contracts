@@ -37,7 +37,7 @@ contract MacondoTableNFT is
     }
 
     function _baseURI() internal pure override returns (string memory) {
-        return "https://macondo-nft-storage.s3.us-west-1.amazonaws.com/meta/";
+        return "https://macondo-nft-storage.s3.us-west-1.amazonaws.com/";
     }
 
     function pause() public onlyRole(PAUSER_ROLE) {
