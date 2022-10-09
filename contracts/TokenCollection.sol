@@ -7,6 +7,7 @@ import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/utils/ERC721HolderUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 
 /**
  * @title ERC20 Token with control over token transfers
@@ -14,7 +15,8 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/utils/ERC721HolderUpgra
 contract TokenCollection is
     Initializable,
     AccessControlUpgradeable,
-    ERC721HolderUpgradeable
+    ERC721HolderUpgradeable,
+    PausableUpgradeable
 {
     event TokenReceived(address from, uint256 amount);
     event Withdraw(address to, uint256 amount);
@@ -32,6 +34,7 @@ contract TokenCollection is
     bytes32 public constant WITHDRAW = keccak256("WITHDRAW");
     bytes32 public constant WITHDRAW_ERC20 = keccak256("WITHDRAW_ERC20");
     bytes32 public constant WITHDRAW_ERC721 = keccak256("WITHDRAW_ERC721");
+    bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -42,15 +45,27 @@ contract TokenCollection is
         __AccessControl_init();
         __ERC721Holder_init();
 
+        __Pausable_init();
+
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _grantRole(PAUSER_ROLE, msg.sender);
     }
 
     receive() external payable virtual {
         emit TokenReceived(_msgSender(), msg.value);
     }
 
+    function pause() public onlyRole(PAUSER_ROLE) {
+        _pause();
+    }
+
+    function unpause() public onlyRole(PAUSER_ROLE) {
+        _unpause();
+    }
+
     function withdraw(address payable to, uint256 amount)
         public
+        whenNotPaused
         onlyRole(WITHDRAW)
     {
         AddressUpgradeable.sendValue(to, amount);
@@ -61,7 +76,7 @@ contract TokenCollection is
         IERC20Upgradeable token,
         address to,
         uint256 value
-    ) public onlyRole(WITHDRAW_ERC20) {
+    ) public whenNotPaused onlyRole(WITHDRAW_ERC20) {
         SafeERC20Upgradeable.safeTransfer(token, to, value);
         emit ERC20Withdraw(token, to, value);
     }
@@ -70,7 +85,7 @@ contract TokenCollection is
         IERC721Upgradeable token,
         address to,
         uint256 tokenId
-    ) public onlyRole(WITHDRAW_ERC721) {
+    ) public whenNotPaused onlyRole(WITHDRAW_ERC721) {
         token.safeTransferFrom(address(this), to, tokenId);
         emit ERC721Withdraw(token, to, tokenId);
     }
