@@ -9,8 +9,8 @@ import { deployUpgradeProxy, deployUpgradeUpdate } from './utils/deploy.util';
 async function main() {
   const DeployContractName = 'MacondoMCD';
 
-  const contractAddress = '0x00c6d4620BD1F6B58eBb5cc7101520bD17644D08';
-  // const contractAddress = null;
+  // const contractAddress = '0xbEa921D1a3625487BED6073cb981cc06f56Ed454';
+  const contractAddress = null;
   if (contractAddress) {
     await deployUpgradeUpdate(DeployContractName, contractAddress);
   } else {
