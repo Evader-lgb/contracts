@@ -27,6 +27,7 @@ contract SampleOffChainAllowList is Ownable {
         require(!signatureUsed[signature], "Signature has already been used.");
 
         // do something with _count
+        _count++;
 
         signatureUsed[signature] = true;
     }
