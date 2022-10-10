@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import "hardhat/console.sol";
-
 import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -16,6 +14,8 @@ contract SampleTransferContract is Pausable, Ownable {
     //token address
     address private _tokenAddress;
 
+    error TransferBalanceError(uint256 amount, uint256 balance);
+
     using EnumerableMap for EnumerableMap.AddressToUintMap;
     EnumerableMap.AddressToUintMap private _portions;
 
@@ -23,7 +23,6 @@ contract SampleTransferContract is Pausable, Ownable {
 
     constructor(address tokenAddress) {
         _tokenAddress = tokenAddress;
-        console.log("Token address: %s", _tokenAddress);
     }
 
     function pause() public onlyOwner {
@@ -42,10 +41,13 @@ contract SampleTransferContract is Pausable, Ownable {
     function portion() public onlyOwner whenNotPaused {
         uint256 balance = getContractBalance();
         uint256 _minAmount = 1 * 10**18;
-        require(
-            balance >= _minAmount,
-            "Amount must be greater than minimum amount"
-        );
+        // require(
+        //     balance >= _minAmount,
+        //     "Amount must be greater than minimum amount"
+        // );
+        if (balance < _minAmount) {
+            revert TransferBalanceError({amount: balance, balance: _minAmount});
+        }
 
         require(
             _portions.length() > 0,

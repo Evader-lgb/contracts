@@ -1,13 +1,13 @@
 import { expect } from 'chai';
-import { ethers } from 'hardhat';
+import { ethers, upgrades } from 'hardhat';
 
 describe('MacondoBFB', function () {
   it('MacondoBFB Test', async function () {
-    const MacondoUSDT = await ethers.getContractFactory('MacondoBFB');
-    const macondoUSDT = await MacondoUSDT.deploy();
-    await macondoUSDT.deployed();
+    const MacondoBFB = await ethers.getContractFactory('MacondoBFB');
+    const macondoBFB = await upgrades.deployProxy(MacondoBFB, []);
+    await macondoBFB.deployed();
 
-    expect(await macondoUSDT.name()).to.equal('BestFriendBet');
-    expect(await macondoUSDT.symbol()).to.equal('BFB');
+    expect(await macondoBFB.name()).to.equal('BestFriendBet');
+    expect(await macondoBFB.symbol()).to.equal('BFB');
   });
 });
