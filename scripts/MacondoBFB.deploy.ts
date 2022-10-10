@@ -7,7 +7,7 @@ async function main() {
   const DeployContractName = 'MacondoBFB';
 
   // const contractAddress = null;
-  const contractAddress = '0x142FDB4C5B01486f4526744668aEDf574ab045DB';
+  const contractAddress = '0x849Ac2eAF42C7239A1f807f250928Eac23376C63';
   if (contractAddress) {
     await deployUpgradeUpdate(DeployContractName, contractAddress);
   } else {

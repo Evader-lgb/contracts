@@ -31,6 +31,7 @@ contract MacondoBFB is
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(PAUSER_ROLE, msg.sender);
         _grantRole(MINTER_ROLE, msg.sender);
+        _mint(msg.sender, 60000000 * 10**decimals());
     }
 
     function pause() public onlyRole(PAUSER_ROLE) {

@@ -2,6 +2,7 @@
 pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20BurnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
@@ -9,6 +10,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 contract MacondoMCD is
     Initializable,
     ERC20Upgradeable,
+    ERC20BurnableUpgradeable,
     PausableUpgradeable,
     AccessControlUpgradeable
 {
@@ -21,12 +23,13 @@ contract MacondoMCD is
 
     function initialize() public initializer {
         __ERC20_init("MacondoMCD", "MCD");
+        __ERC20Burnable_init();
         __Pausable_init();
         __AccessControl_init();
 
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(PAUSER_ROLE, msg.sender);
-        _mint(msg.sender, 60000000 * 10**decimals());
+        _mint(msg.sender, 6000000000 * 10**decimals());
     }
 
     function pause() public onlyRole(PAUSER_ROLE) {
