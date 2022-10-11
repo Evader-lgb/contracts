@@ -15,7 +15,7 @@ contract RandomOracleConsumer is VRFConsumerBaseV2, Ownable {
     event RequestComplete(uint256 requestId);
 
     // Your subscription ID.
-    uint64 s_subscriptionId;
+    uint64 immutable s_subscriptionId;
 
     // Rinkeby coordinator. For other networks,
     // see https://docs.chain.link/docs/vrf-contracts/#configurations
