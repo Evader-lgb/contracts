@@ -6,15 +6,24 @@ import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol"
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/cryptography/ECDSAUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol";
+import "./MacondoTableNFT.sol";
+import "hardhat/console.sol";
 
-contract FreeMintTableWithSign is
+contract MacondoTableNFTFreeMintWithSign is
     Initializable,
     PausableUpgradeable,
     AccessControlUpgradeable
 {
+    //event
+    event FreeMint(address indexed to, uint256 indexed tokenId);
+
+    //errors
+    error ErrorSigner(address signer);
+    error ErrorSignatureUsed(bytes signature);
+
     mapping(bytes => bool) private signatureUsed;
 
-    IERC721Upgradeable private tokenContract;
+    MacondoTableNFT public tokenContract;
 
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
@@ -24,7 +33,7 @@ contract FreeMintTableWithSign is
         _disableInitializers();
     }
 
-    function initialize(IERC721Upgradeable _tokenContract) public initializer {
+    function initialize(MacondoTableNFT _tokenContract) public initializer {
         __Pausable_init();
         __AccessControl_init();
 
@@ -43,14 +52,21 @@ contract FreeMintTableWithSign is
         _unpause();
     }
 
-    using ECDSAUpgradeable for bytes32;
-
     function recoverSigner(bytes32 hash, bytes memory signature)
         public
         pure
         returns (address)
     {
-        return hash.toEthSignedMessageHash().recover(signature);
+        bytes32 ethSign = ECDSAUpgradeable.toEthSignedMessageHash(hash);
+        return ECDSAUpgradeable.recover(ethSign, signature);
+    }
+
+    function getMessageHash(address to, uint256 tokenId)
+        public
+        pure
+        returns (bytes32)
+    {
+        return keccak256(abi.encodePacked(to, tokenId));
     }
 
     function freeMint(
@@ -58,16 +74,20 @@ contract FreeMintTableWithSign is
         uint256 tokenId,
         string memory uri,
         bytes memory signature
-    ) public whenNotPaused {
-        bytes32 hash = keccak256(abi.encodePacked(to, tokenId, uri));
-        address signer = recoverSigner(hash, signature);
-        _checkRole(MINTER_ROLE, signer);
+    ) external whenNotPaused {
+        bytes32 _messageHash = getMessageHash(to, tokenId);
+        address signer = recoverSigner(_messageHash, signature);
 
-        require(!signatureUsed[signature], "Signature has already been used.");
+        if (!hasRole(MINTER_ROLE, signer)) {
+            revert ErrorSigner(signer);
+        }
+        if (signatureUsed[signature]) {
+            revert ErrorSignatureUsed(signature);
+        }
 
         //mint
-        // tokenContract.safeMint(to, tokenId, uri);
-
+        tokenContract.safeMint(to, tokenId, uri);
         signatureUsed[signature] = true;
+        emit FreeMint(to, tokenId);
     }
 }
