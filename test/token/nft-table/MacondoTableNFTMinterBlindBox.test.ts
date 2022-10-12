@@ -151,5 +151,25 @@ describe('MacondoTableNFTMinterBlindBox', () => {
           })
       ).to.be.revertedWith('not enough money');
     });
+
+    it('fail:wrong is pause', async () => {
+      const [owner, addr1] = await ethers.getSigners();
+
+      const message = ethers.utils.solidityKeccak256(
+        ['address', 'uint256', 'uint256'],
+        [addr1.address, tokenId, price]
+      );
+      const signature = await owner.signMessage(ethers.utils.arrayify(message));
+
+      await contract.pause();
+
+      await expect(
+        contract
+          .connect(addr1)
+          .buyWithSaleRoleSign(tokenId, tokenURI, price, signature, {
+            value: price.mul(2),
+          })
+      ).to.be.revertedWith('Pausable: paused');
+    });
   });
 });
