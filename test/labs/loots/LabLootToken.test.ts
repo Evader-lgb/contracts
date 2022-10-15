@@ -14,7 +14,7 @@ describe('LabLootToken', () => {
     await labLootTokenResource.deployed();
 
     const LabLootToken = await ethers.getContractFactory('LabLootToken');
-    labLootToken = await LabLootToken.deploy();
+    labLootToken = await LabLootToken.deploy(labLootTokenResource.address);
     await labLootToken.deployed();
   });
 

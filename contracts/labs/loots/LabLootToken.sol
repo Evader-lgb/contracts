@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "./LabLootTokenResource.sol";
 
 contract LabLootToken is
     ERC721,
@@ -18,7 +19,10 @@ contract LabLootToken is
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
-    constructor() ERC721("LabLootToken", "LLT") {
+    LabLootTokenResource public immutable resource;
+
+    constructor(LabLootTokenResource _resource) ERC721("LabLootToken", "LLT") {
+        resource = _resource;
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(PAUSER_ROLE, msg.sender);
         _grantRole(MINTER_ROLE, msg.sender);
@@ -64,7 +68,8 @@ contract LabLootToken is
         override(ERC721, ERC721URIStorage)
         returns (string memory)
     {
-        return super.tokenURI(tokenId);
+        string memory baseURI = super.tokenURI(tokenId);
+        return resource.tokenURI(tokenId, baseURI);
     }
 
     function _claimMint(address to, uint256 tokenId) private {

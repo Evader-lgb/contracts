@@ -27,9 +27,6 @@ module.exports = {
   solidity: '0.8.4',
 
   networks: {
-    hardhat: {
-      allowUnlimitedContractSize: true,
-    },
     bsc_testnet: {
       url: 'https://macondo:macondo@apis.ankr.com/dc6b7aacd5264d7da2a720924d7f43d4/076fde4bad3f062d326ccc9dab7c7a38/binance/full/test',
       chainId: 97,
