@@ -20,9 +20,9 @@ contract MacondoTableNFTFreeMintWithSign is
     error ErrorSigner(address signer);
     error ErrorSignatureUsed(bytes signature);
 
-    mapping(bytes => bool) private signatureUsed;
+    mapping(bytes => bool) internal signatureUsed;
 
-    MacondoTableNFT public tokenContract;
+    MacondoTableNFT internal tokenContract;
 
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
