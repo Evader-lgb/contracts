@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { Contract } from 'ethers';
 import { ethers } from 'hardhat';
 
-describe('LabLootToken', () => {
+describe('LabLootTokenResource', () => {
   let labLootToken: Contract;
   let labLootTokenResource: Contract;
 
@@ -12,20 +12,10 @@ describe('LabLootToken', () => {
     );
     labLootTokenResource = await LabLootTokenResource.deploy();
     await labLootTokenResource.deployed();
-
-    const LabLootToken = await ethers.getContractFactory('LabLootToken');
-    labLootToken = await LabLootToken.deploy();
-    await labLootToken.deployed();
-  });
-
-  it('should return the right name', async () => {
-    expect(await labLootToken.name()).to.equal('LabLootToken');
   });
 
   it('should tokenURI', async () => {
-    await labLootToken.claim(1);
-
-    const tokenURI = await labLootToken.tokenURI(1);
+    const tokenURI = await labLootTokenResource.tokenURI(1, '1#1665827927');
     console.log(tokenURI);
 
     expect(tokenURI).to.any;
