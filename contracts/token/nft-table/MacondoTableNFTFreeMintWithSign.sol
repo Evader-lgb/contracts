@@ -2,6 +2,7 @@
 pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/cryptography/ECDSAUpgradeable.sol";
@@ -11,7 +12,8 @@ import "./MacondoTableNFT.sol";
 contract MacondoTableNFTFreeMintWithSign is
     Initializable,
     PausableUpgradeable,
-    AccessControlUpgradeable
+    AccessControlUpgradeable,
+    ReentrancyGuardUpgradeable
 {
     //event
     event FreeMint(address indexed to, uint256 indexed tokenId);
@@ -73,7 +75,7 @@ contract MacondoTableNFTFreeMintWithSign is
         uint256 tokenId,
         string memory uri,
         bytes memory signature
-    ) external whenNotPaused {
+    ) external whenNotPaused nonReentrant {
         bytes32 _messageHash = getMessageHash(to, tokenId);
         address signer = recoverSigner(_messageHash, signature);
 
@@ -84,9 +86,9 @@ contract MacondoTableNFTFreeMintWithSign is
             revert ErrorSignatureUsed(signature);
         }
 
+        signatureUsed[signature] = true;
         //mint
         tokenContract.safeMint(to, tokenId, uri);
-        signatureUsed[signature] = true;
         emit FreeMint(to, tokenId);
     }
 }
