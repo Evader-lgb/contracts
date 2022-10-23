@@ -27,12 +27,15 @@ describe('MacondoTableNFTMinterBlindBox', () => {
     );
   });
 
-  it('MacondoTableNFTMinterBlindBox:Deploy Test', async () => {
+  it.only('MacondoTableNFTMinterBlindBox:Deploy Test', async () => {
     const address = contract.address;
     expect(ethers.utils.isAddress(address)).to.be.any;
 
-    const price = await contract.defaultPrice();
-    expect(price.toString()).to.equal(ethers.utils.parseEther('0'));
+    const defaultConfig = await contract.defaultConfig();
+    expect(defaultConfig.period).to.equal('0');
+    expect(defaultConfig.price).to.equal('0');
+    expect(defaultConfig.startTimestamp).to.equal('0');
+    expect(defaultConfig.endTimestamp).to.equal('0');
   });
 
   describe('MacondoTableNFTMinterBlindBox:buyWithSaleRoleSign', () => {

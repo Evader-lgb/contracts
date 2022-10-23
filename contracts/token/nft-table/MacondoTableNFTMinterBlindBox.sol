@@ -26,21 +26,24 @@ contract MacondoTableNFTMinterBlindBox is
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant SALE_ROLE = keccak256("SALE_ROLE");
 
-    //default sale period
-    uint256 public salePeroiod;
+    struct saleConfig {
+        //default sale period
+        uint256 period;
+        //default price
+        uint256 price;
+        //sale start time
+        uint256 startTimestamp;
+        //sale end time
+        uint256 endTimestamp;
+    }
 
-    //default price
-    uint256 public defaultPrice;
+    //sale config
+    saleConfig public defaultConfig;
 
     //current sold count
     uint256 public soldCount;
     //max sale count
     uint256 public saleLimit;
-
-    //sale start time
-    uint256 public saleStartTimestamp;
-    //sale end time
-    uint256 public saleEndTimestamp;
 
     //sale list
     mapping(address => uint256) public saleList;
@@ -133,11 +136,26 @@ contract MacondoTableNFTMinterBlindBox is
         );
     }
 
+    function setSaleConfig(
+        uint256 _salePeroiod,
+        uint256 _salePrice,
+        uint256 _saleStartTime,
+        uint256 _saleEndTime,
+        uint256 _saleLimit
+    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        defaultConfig.period = _salePeroiod;
+        defaultConfig.price = _salePrice;
+        defaultConfig.startTimestamp = _saleStartTime;
+        defaultConfig.endTimestamp = _saleEndTime;
+
+        saleLimit = _saleLimit;
+    }
+
     function _checkInSalePeriod() internal view {
-        if (block.timestamp < saleStartTimestamp) {
+        if (block.timestamp < defaultConfig.startTimestamp) {
             revert(string(abi.encodePacked("sale not start")));
         }
-        if (block.timestamp > saleEndTimestamp) {
+        if (block.timestamp > defaultConfig.endTimestamp) {
             revert(string(abi.encodePacked("sale end")));
         }
     }
