@@ -45,8 +45,12 @@ contract MacondoTableNFTMinterBlindBox is
     //max sale count
     uint256 public saleLimit;
 
+    struct saleListData {
+        //sale list
+        uint256[] tokenIds;
+    }
     //sale list
-    mapping(address => uint256) public saleList;
+    mapping(address => saleListData) internal saleList;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -109,6 +113,7 @@ contract MacondoTableNFTMinterBlindBox is
         string memory uri,
         uint256 price
     ) internal whenNotPaused {
+        _checkInSalePeriod();
         //check money
         if (price <= 1) {
             revert(string(abi.encodePacked("price must be greater than 1")));
@@ -116,6 +121,16 @@ contract MacondoTableNFTMinterBlindBox is
         if (msg.value < price) {
             revert(string(abi.encodePacked("not enough money")));
         }
+        //check sale limit
+        if (saleLimit > 0 && soldCount >= saleLimit) {
+            revert(string(abi.encodePacked("sale limit")));
+        }
+
+        //set to sale list
+        saleList[to].tokenIds.push(tokenId);
+        //add sold count
+        soldCount++;
+
         //mint token
         tokenContract.safeMint(to, tokenId, uri);
         //refund

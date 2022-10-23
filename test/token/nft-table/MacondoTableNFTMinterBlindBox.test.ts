@@ -27,7 +27,7 @@ describe('MacondoTableNFTMinterBlindBox', () => {
     );
   });
 
-  it.only('MacondoTableNFTMinterBlindBox:Deploy Test', async () => {
+  it('MacondoTableNFTMinterBlindBox:Deploy Test', async () => {
     const address = contract.address;
     expect(ethers.utils.isAddress(address)).to.be.any;
 
@@ -39,6 +39,16 @@ describe('MacondoTableNFTMinterBlindBox', () => {
   });
 
   describe('MacondoTableNFTMinterBlindBox:buyWithSaleRoleSign', () => {
+    beforeEach(async () => {
+      await contract.setSaleConfig(
+        '1',
+        ethers.utils.parseEther('1'),
+        Math.floor(new Date().getTime() / 1000) - 2 * 60,
+        Math.floor(new Date().getTime() / 1000) + 2 * 60,
+        '50'
+      );
+    });
+
     const tokenId = 1;
     const tokenURI = 'www.macondo.io';
     const price = ethers.utils.parseEther('1');
