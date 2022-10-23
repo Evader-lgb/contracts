@@ -17,7 +17,6 @@ describe('MacondoTableNFTMinterBlindBox', () => {
     );
     contract = await upgrades.deployProxy(MacondoTableNFTMinterBlindBox, [
       macondoTableNFT.address,
-      ethers.utils.parseEther('1'),
     ]);
     await contract.deployed();
 
@@ -32,8 +31,8 @@ describe('MacondoTableNFTMinterBlindBox', () => {
     const address = contract.address;
     expect(ethers.utils.isAddress(address)).to.be.any;
 
-    const price = await contract.salePrice();
-    expect(price.toString()).to.equal(ethers.utils.parseEther('1'));
+    const price = await contract.defaultPrice();
+    expect(price.toString()).to.equal(ethers.utils.parseEther('0'));
   });
 
   describe('MacondoTableNFTMinterBlindBox:buyWithSaleRoleSign', () => {

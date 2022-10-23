@@ -26,8 +26,21 @@ contract MacondoTableNFTMinterBlindBox is
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant SALE_ROLE = keccak256("SALE_ROLE");
 
+    //default sale period
+    uint256 public salePeroiod;
+
     //default price
-    uint256 public salePrice;
+    uint256 public defaultPrice;
+
+    //current sold count
+    uint256 public soldCount;
+    //max sale count
+    uint256 public saleLimit;
+
+    //sale start time
+    uint256 public saleStartTimestamp;
+    //sale end time
+    uint256 public saleEndTimestamp;
 
     //sale list
     mapping(address => uint256) public saleList;
@@ -37,10 +50,7 @@ contract MacondoTableNFTMinterBlindBox is
         _disableInitializers();
     }
 
-    function initialize(MacondoTableNFT _tokenContract, uint256 _salePrice)
-        public
-        initializer
-    {
+    function initialize(MacondoTableNFT _tokenContract) public initializer {
         __Pausable_init();
         __AccessControl_init();
 
@@ -49,7 +59,6 @@ contract MacondoTableNFTMinterBlindBox is
         _grantRole(SALE_ROLE, msg.sender);
 
         tokenContract = _tokenContract;
-        salePrice = _salePrice;
     }
 
     function pause() public onlyRole(PAUSER_ROLE) {
@@ -88,7 +97,7 @@ contract MacondoTableNFTMinterBlindBox is
             revert ErrorSaleRoleCannotSaleToSelf();
         }
 
-        _sale(to, tokenId, uri, salePrice);
+        _sale(to, tokenId, uri, price);
     }
 
     function _sale(
@@ -122,5 +131,14 @@ contract MacondoTableNFTMinterBlindBox is
             payable(msg.sender),
             address(this).balance
         );
+    }
+
+    function _checkInSalePeriod() internal view {
+        if (block.timestamp < saleStartTimestamp) {
+            revert(string(abi.encodePacked("sale not start")));
+        }
+        if (block.timestamp > saleEndTimestamp) {
+            revert(string(abi.encodePacked("sale end")));
+        }
     }
 }
