@@ -45,13 +45,6 @@ contract MacondoTableNFTMinterBlindBox is
     //max sale count
     uint256 public saleLimit;
 
-    struct saleListData {
-        //sale list
-        uint256[] tokenIds;
-    }
-    //sale list
-    mapping(address => saleListData) internal saleList;
-
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
         _disableInitializers();
@@ -126,11 +119,8 @@ contract MacondoTableNFTMinterBlindBox is
             revert(string(abi.encodePacked("sale limit")));
         }
 
-        //set to sale list
-        saleList[to].tokenIds.push(tokenId);
         //add sold count
         soldCount++;
-
         //mint token
         tokenContract.safeMint(to, tokenId, uri);
         //refund
