@@ -7,6 +7,9 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/cryptography/ECDSAUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
+
 import "./MacondoTableNFT.sol";
 
 contract MacondoTableNFTMinterBlindBox is
@@ -40,10 +43,16 @@ contract MacondoTableNFTMinterBlindBox is
     //sale config
     saleConfig public defaultConfig;
 
+    //initial token id
+    uint256 public initialTokenId;
+
     //current sold count
     uint256 public soldCount;
     //max sale count
     uint256 public saleLimit;
+
+    using CountersUpgradeable for CountersUpgradeable.Counter;
+    CountersUpgradeable.Counter private _tokenIdCounter;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -156,6 +165,13 @@ contract MacondoTableNFTMinterBlindBox is
         saleLimit = _saleLimit;
     }
 
+    function setInitialTokenId(uint256 _initialTokenId)
+        external
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        initialTokenId = _initialTokenId;
+    }
+
     function _checkInSalePeriod() internal view {
         if (block.timestamp < defaultConfig.startTimestamp) {
             revert(string(abi.encodePacked("sale not start")));
@@ -163,5 +179,32 @@ contract MacondoTableNFTMinterBlindBox is
         if (block.timestamp > defaultConfig.endTimestamp) {
             revert(string(abi.encodePacked("sale end")));
         }
+    }
+
+    //sale
+    function sale() external payable {
+        address _to = _msgSender();
+
+        uint256 _tokenId = _tokenIdCounter.current() + initialTokenId;
+        _tokenIdCounter.increment();
+
+        string memory _uri = _tokenURI(_tokenId);
+        _sale(_to, _tokenId, _uri, defaultConfig.price);
+    }
+
+    function _tokenURI(uint256 tokenId)
+        internal
+        view
+        virtual
+        returns (string memory)
+    {
+        //_uri:meta/desk_+_tokenId
+        return
+            string(
+                abi.encodePacked(
+                    "meta/desk_",
+                    StringsUpgradeable.toString(tokenId)
+                )
+            );
     }
 }

@@ -48,7 +48,6 @@ describe('MacondoTableNFTMinterBlindBox', () => {
         '50'
       );
     });
-
     const tokenId = 1;
     const tokenURI = 'www.macondo.io';
     const price = ethers.utils.parseEther('1');
@@ -182,6 +181,28 @@ describe('MacondoTableNFTMinterBlindBox', () => {
             value: price.mul(2),
           })
       ).to.be.revertedWith('Pausable: paused');
+    });
+  });
+
+  describe.only('MacondoTableNFTMinterBlindBox:sale', () => {
+    beforeEach(async () => {
+      await contract.setSaleConfig(
+        '1',
+        ethers.utils.parseEther('1'),
+        Math.floor(new Date().getTime() / 1000) - 2 * 60,
+        Math.floor(new Date().getTime() / 1000) + 2 * 60,
+        '50'
+      );
+
+      await contract.setInitialTokenId(200000);
+    });
+
+    it('success', async () => {
+      const [owner, addr1] = await ethers.getSigners();
+
+      await expect(contract.sale({ value: ethers.utils.parseEther('1') }))
+        .to.emit(contract, 'SaleBox')
+        .withArgs(owner.address, 200000);
     });
   });
 });
