@@ -118,6 +118,10 @@ contract MacondoTableNFTMinterBlindBox is
         initialTokenId = _initialTokenId;
     }
 
+    function currentTokenId() public view returns (uint256) {
+        return _tokenIdCounter.current() + initialTokenId;
+    }
+
     //sale
     function sale() external payable nonReentrant {
         address _to = _msgSender();

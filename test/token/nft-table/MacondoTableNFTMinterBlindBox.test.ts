@@ -258,9 +258,13 @@ describe('MacondoTableNFTMinterBlindBox', () => {
     it('success withdraw', async () => {
       const [owner, addr1] = await ethers.getSigners();
 
+      expect((await contract.currentTokenId()).toNumber()).to.equal(200000);
       await contract.sale({ value: ethers.utils.parseEther('1') });
+      expect((await contract.currentTokenId()).toNumber()).to.equal(200001);
       await contract.sale({ value: ethers.utils.parseEther('1') });
+      expect((await contract.currentTokenId()).toNumber()).to.equal(200002);
       await contract.sale({ value: ethers.utils.parseEther('1') });
+      expect((await contract.currentTokenId()).toNumber()).to.equal(200003);
 
       const contractBalance = await ethers.provider.getBalance(
         contract.address
