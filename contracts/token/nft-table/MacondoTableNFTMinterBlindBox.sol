@@ -64,6 +64,7 @@ contract MacondoTableNFTMinterBlindBox is
     function initialize(MacondoTableNFT _tokenContract) public initializer {
         __Pausable_init();
         __AccessControl_init();
+        __ReentrancyGuard_init();
 
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(PAUSER_ROLE, msg.sender);
@@ -116,9 +117,7 @@ contract MacondoTableNFTMinterBlindBox is
         uint256 tokenId,
         string memory uri,
         uint256 price
-    ) internal whenNotPaused inSalePeriod {
-        //2.check sale limit
-        _checkSaleLimit();
+    ) internal whenNotPaused inSalePeriod checkSaleLimit {
         //check money
         if (price <= 1) {
             revert(string(abi.encodePacked("price must be greater than 1")));
@@ -182,10 +181,11 @@ contract MacondoTableNFTMinterBlindBox is
         _;
     }
 
-    function _checkSaleLimit() internal view {
+    modifier checkSaleLimit() {
         if (saleLimit > 0 && soldCount >= saleLimit) {
             revert(string(abi.encodePacked("sale count limit")));
         }
+        _;
     }
 
     //sale
