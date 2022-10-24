@@ -51,6 +51,10 @@ contract MacondoTableNFTMinterBlindBox is
         _unpause();
     }
 
+    function withdraw() external onlyRole(DEFAULT_ADMIN_ROLE) {
+        _withdraw();
+    }
+
     function _saleBefore(
         address to,
         uint256 tokenId,
@@ -58,41 +62,6 @@ contract MacondoTableNFTMinterBlindBox is
         uint256 price
     ) internal override whenNotPaused {
         super._saleBefore(to, tokenId, uri, price);
-    }
-
-    function recoverSigner(bytes32 hash, bytes memory signature)
-        public
-        pure
-        returns (address)
-    {
-        bytes32 ethSign = ECDSAUpgradeable.toEthSignedMessageHash(hash);
-        return ECDSAUpgradeable.recover(ethSign, signature);
-    }
-
-    function buyWithSaleRoleSign(
-        uint256 tokenId,
-        string memory uri,
-        uint256 price,
-        bytes memory signature
-    ) external payable {
-        address to = _msgSender();
-        address signer = recoverSigner(
-            keccak256(abi.encodePacked(to, tokenId, price)),
-            signature
-        );
-
-        if (!hasRole(SALE_ROLE, signer)) {
-            revert ErrorSaleRoleSignature(signer);
-        }
-        if (to == signer) {
-            revert ErrorSaleRoleCannotSaleToSelf();
-        }
-
-        _sale(to, tokenId, uri, price);
-    }
-
-    function withdraw() external onlyRole(DEFAULT_ADMIN_ROLE) {
-        _withdraw();
     }
 
     function setSaleConfig(
@@ -109,6 +78,37 @@ contract MacondoTableNFTMinterBlindBox is
             _saleEndTime,
             _saleLimit
         );
+    }
+
+    function recoverSigner(bytes32 hash, bytes memory signature)
+        public
+        pure
+        returns (address)
+    {
+        bytes32 ethSign = ECDSAUpgradeable.toEthSignedMessageHash(hash);
+        return ECDSAUpgradeable.recover(ethSign, signature);
+    }
+
+    function buyWithSaleRoleSign(
+        uint256 tokenId,
+        string memory uri,
+        uint256 price,
+        bytes memory signature
+    ) external payable nonReentrant {
+        address to = _msgSender();
+        address signer = recoverSigner(
+            keccak256(abi.encodePacked(to, tokenId, price)),
+            signature
+        );
+
+        if (!hasRole(SALE_ROLE, signer)) {
+            revert ErrorSaleRoleSignature(signer);
+        }
+        if (to == signer) {
+            revert ErrorSaleRoleCannotSaleToSelf();
+        }
+
+        _sale(to, tokenId, uri, price);
     }
 
     function setInitialTokenId(uint256 _initialTokenId)
