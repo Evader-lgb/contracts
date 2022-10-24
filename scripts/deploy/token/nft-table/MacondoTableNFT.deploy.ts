@@ -5,7 +5,10 @@
 // Runtime Environment's members available in the global scope.
 // const hre = require("hardhat");
 import { ethers } from 'ethers';
-import { deployUpgradeProxy, deployUpgradeUpdate } from './utils/deploy.util';
+import {
+  deployUpgradeProxy,
+  deployUpgradeUpdate,
+} from '../../utils/deploy.util';
 const {
   CONTRACT_DEFAULT_CALLER_ADDRESS,
   PRIVATE_KEY_RANDOM_CONSUMER_CONTRACT_CALLER,

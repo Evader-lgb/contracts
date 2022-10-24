@@ -18,14 +18,14 @@ contract MacondoTableNFTMinterBlindBox is
     ReentrancyGuardUpgradeable,
     NFTStore
 {
+    using CountersUpgradeable for CountersUpgradeable.Counter;
+    CountersUpgradeable.Counter private _tokenIdCounter;
+
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant SALE_ROLE = keccak256("SALE_ROLE");
 
     //initial token id
     uint256 private initialTokenId;
-
-    using CountersUpgradeable for CountersUpgradeable.Counter;
-    CountersUpgradeable.Counter private _tokenIdCounter;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {

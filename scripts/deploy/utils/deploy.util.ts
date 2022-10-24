@@ -61,13 +61,14 @@ export async function deployNormal(
  * @returns  合约地址
  */
 export async function deployUpgradeProxy(
-  contractName: string
+  contractName: string,
+  args?: unknown[]
 ): Promise<Contract> {
   const DeployContractName = contractName;
   const DeployContract = await hre.ethers.getContractFactory(
     DeployContractName
   );
-  const deployContract = await upgrades.deployProxy(DeployContract);
+  const deployContract = await upgrades.deployProxy(DeployContract, args);
   return _deploy(DeployContractName, deployContract);
 }
 /**
