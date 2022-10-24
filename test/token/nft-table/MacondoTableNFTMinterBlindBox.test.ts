@@ -184,7 +184,7 @@ describe('MacondoTableNFTMinterBlindBox', () => {
     });
   });
 
-  describe.only('MacondoTableNFTMinterBlindBox:sale', () => {
+  describe('MacondoTableNFTMinterBlindBox:sale', () => {
     beforeEach(async () => {
       await contract.setSaleConfig(
         '1',
@@ -203,6 +203,34 @@ describe('MacondoTableNFTMinterBlindBox', () => {
       await expect(contract.sale({ value: ethers.utils.parseEther('1') }))
         .to.emit(contract, 'SaleBox')
         .withArgs(owner.address, 200000);
+    });
+
+    it('fail:not in period', async () => {
+      const [owner, addr1] = await ethers.getSigners();
+
+      await contract.setSaleConfig(
+        '1',
+        ethers.utils.parseEther('1'),
+        Math.floor(new Date().getTime() / 1000) + 2 * 60,
+        Math.floor(new Date().getTime() / 1000) + 4 * 60,
+        '50'
+      );
+
+      await expect(
+        contract.sale({ value: ethers.utils.parseEther('1') })
+      ).to.be.revertedWith('sale not start');
+
+      await contract.setSaleConfig(
+        '1',
+        ethers.utils.parseEther('1'),
+        Math.floor(new Date().getTime() / 1000) - 4 * 60,
+        Math.floor(new Date().getTime() / 1000) - 2 * 60,
+        '50'
+      );
+
+      await expect(
+        contract.sale({ value: ethers.utils.parseEther('1') })
+      ).to.be.revertedWith('sale end');
     });
   });
 });

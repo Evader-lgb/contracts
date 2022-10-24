@@ -9,13 +9,15 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol"
 import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 
 import "./MacondoTableNFT.sol";
 
 contract MacondoTableNFTMinterBlindBox is
     Initializable,
     PausableUpgradeable,
-    AccessControlUpgradeable
+    AccessControlUpgradeable,
+    ReentrancyGuardUpgradeable
 {
     //event
     event SaleBox(address indexed to, uint256 indexed tokenId);
@@ -44,7 +46,7 @@ contract MacondoTableNFTMinterBlindBox is
     saleConfig public defaultConfig;
 
     //initial token id
-    uint256 public initialTokenId;
+    uint256 private initialTokenId;
 
     //current sold count
     uint256 public soldCount;
@@ -114,18 +116,15 @@ contract MacondoTableNFTMinterBlindBox is
         uint256 tokenId,
         string memory uri,
         uint256 price
-    ) internal whenNotPaused {
-        _checkInSalePeriod();
+    ) internal whenNotPaused inSalePeriod {
+        //2.check sale limit
+        _checkSaleLimit();
         //check money
         if (price <= 1) {
             revert(string(abi.encodePacked("price must be greater than 1")));
         }
         if (msg.value < price) {
             revert(string(abi.encodePacked("not enough money")));
-        }
-        //check sale limit
-        if (saleLimit > 0 && soldCount >= saleLimit) {
-            revert(string(abi.encodePacked("sale limit")));
         }
 
         //add sold count
@@ -172,17 +171,25 @@ contract MacondoTableNFTMinterBlindBox is
         initialTokenId = _initialTokenId;
     }
 
-    function _checkInSalePeriod() internal view {
+    modifier inSalePeriod() {
         if (block.timestamp < defaultConfig.startTimestamp) {
             revert(string(abi.encodePacked("sale not start")));
         }
         if (block.timestamp > defaultConfig.endTimestamp) {
             revert(string(abi.encodePacked("sale end")));
         }
+
+        _;
+    }
+
+    function _checkSaleLimit() internal view {
+        if (saleLimit > 0 && soldCount >= saleLimit) {
+            revert(string(abi.encodePacked("sale limit")));
+        }
     }
 
     //sale
-    function sale() external payable {
+    function sale() external payable nonReentrant {
         address _to = _msgSender();
 
         uint256 _tokenId = _tokenIdCounter.current() + initialTokenId;
@@ -198,7 +205,6 @@ contract MacondoTableNFTMinterBlindBox is
         virtual
         returns (string memory)
     {
-        //_uri:meta/desk_+_tokenId
         return
             string(
                 abi.encodePacked(
