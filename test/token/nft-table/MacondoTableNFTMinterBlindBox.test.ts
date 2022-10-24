@@ -254,5 +254,41 @@ describe('MacondoTableNFTMinterBlindBox', () => {
         contract.sale({ value: ethers.utils.parseEther('1') })
       ).to.be.revertedWith('sale count limit');
     });
+
+    it('success withdraw', async () => {
+      const [owner, addr1] = await ethers.getSigners();
+
+      await contract.sale({ value: ethers.utils.parseEther('1') });
+      await contract.sale({ value: ethers.utils.parseEther('1') });
+      await contract.sale({ value: ethers.utils.parseEther('1') });
+
+      const contractBalance = await ethers.provider.getBalance(
+        contract.address
+      );
+      expect(contractBalance).to.equal(ethers.utils.parseEther('3'));
+
+      await contract.withdraw();
+
+      const contractBalanceAfter = await ethers.provider.getBalance(
+        contract.address
+      );
+      expect(contractBalanceAfter).to.equal(0);
+    });
+
+    it('fail:wrong price', async () => {
+      const [owner, addr1] = await ethers.getSigners();
+
+      await contract.setSaleConfig(
+        '1',
+        ethers.utils.parseEther('2'),
+        Math.floor(new Date().getTime() / 1000) - 20 * 60,
+        Math.floor(new Date().getTime() / 1000) + 20 * 60,
+        '50'
+      );
+
+      await expect(
+        contract.sale({ value: ethers.utils.parseEther('1') })
+      ).to.be.revertedWith('not enough money');
+    });
   });
 });
