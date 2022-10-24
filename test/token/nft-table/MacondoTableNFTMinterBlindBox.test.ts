@@ -203,6 +203,10 @@ describe('MacondoTableNFTMinterBlindBox', () => {
       await expect(contract.sale({ value: ethers.utils.parseEther('1') }))
         .to.emit(contract, 'SaleBox')
         .withArgs(owner.address, 200000);
+
+      await expect(contract.sale({ value: ethers.utils.parseEther('1') }))
+        .to.emit(contract, 'SaleBox')
+        .withArgs(owner.address, 200001);
     });
 
     it('fail:not in period', async () => {
