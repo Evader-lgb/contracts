@@ -101,13 +101,32 @@ contract NFTStore is Initializable, ContextUpgradeable {
         uint256 _salePeroiod,
         uint256 _salePrice,
         uint256 _saleStartTime,
-        uint256 _saleEndTime,
-        uint256 _saleLimit
+        uint256 _saleEndTime
     ) internal {
+        //start time must be less than end time
+        if (_saleStartTime >= _saleEndTime) {
+            revert(
+                string(
+                    abi.encodePacked("start time must be less than end time")
+                )
+            );
+        }
         defaultConfig.period = _salePeroiod;
         defaultConfig.price = _salePrice;
         defaultConfig.startTimestamp = _saleStartTime;
         defaultConfig.endTimestamp = _saleEndTime;
+    }
+
+    function _setSaleLimit(uint256 _saleLimit) internal {
+        if (_saleLimit < soldCount) {
+            revert(
+                string(
+                    abi.encodePacked(
+                        "sale limit must be greater than sold count"
+                    )
+                )
+            );
+        }
 
         saleLimit = _saleLimit;
     }

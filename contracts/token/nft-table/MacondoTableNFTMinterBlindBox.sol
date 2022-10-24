@@ -71,13 +71,8 @@ contract MacondoTableNFTMinterBlindBox is
         uint256 _saleEndTime,
         uint256 _saleLimit
     ) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        _setSaleConfig(
-            _salePeroiod,
-            _salePrice,
-            _saleStartTime,
-            _saleEndTime,
-            _saleLimit
-        );
+        _setSaleConfig(_salePeroiod, _salePrice, _saleStartTime, _saleEndTime);
+        _setSaleLimit(_saleLimit);
     }
 
     function recoverSigner(bytes32 hash, bytes memory signature)
