@@ -43,8 +43,8 @@ describe('MacondoTableNFTMinterBlindBox', () => {
       await contract.setSaleConfig(
         '1',
         ethers.utils.parseEther('1'),
-        Math.floor(new Date().getTime() / 1000) - 2 * 60,
-        Math.floor(new Date().getTime() / 1000) + 2 * 60,
+        Math.floor(new Date().getTime() / 1000) - 20 * 60,
+        Math.floor(new Date().getTime() / 1000) + 20 * 60,
         '50'
       );
     });
@@ -189,8 +189,8 @@ describe('MacondoTableNFTMinterBlindBox', () => {
       await contract.setSaleConfig(
         '1',
         ethers.utils.parseEther('1'),
-        Math.floor(new Date().getTime() / 1000) - 2 * 60,
-        Math.floor(new Date().getTime() / 1000) + 2 * 60,
+        Math.floor(new Date().getTime() / 1000) - 20 * 60,
+        Math.floor(new Date().getTime() / 1000) + 20 * 60,
         '50'
       );
 
@@ -211,8 +211,8 @@ describe('MacondoTableNFTMinterBlindBox', () => {
       await contract.setSaleConfig(
         '1',
         ethers.utils.parseEther('1'),
-        Math.floor(new Date().getTime() / 1000) + 2 * 60,
-        Math.floor(new Date().getTime() / 1000) + 4 * 60,
+        Math.floor(new Date().getTime() / 1000) + 10 * 60,
+        Math.floor(new Date().getTime() / 1000) + 20 * 60,
         '50'
       );
 
@@ -223,14 +223,32 @@ describe('MacondoTableNFTMinterBlindBox', () => {
       await contract.setSaleConfig(
         '1',
         ethers.utils.parseEther('1'),
-        Math.floor(new Date().getTime() / 1000) - 4 * 60,
-        Math.floor(new Date().getTime() / 1000) - 2 * 60,
+        Math.floor(new Date().getTime() / 1000) - 40 * 60,
+        Math.floor(new Date().getTime() / 1000) - 20 * 60,
         '50'
       );
 
       await expect(
         contract.sale({ value: ethers.utils.parseEther('1') })
       ).to.be.revertedWith('sale end');
+    });
+
+    it('fail:reach sale count limit', async () => {
+      const [owner, addr1] = await ethers.getSigners();
+
+      await contract.setSaleConfig(
+        '1',
+        ethers.utils.parseEther('1'),
+        Math.floor(new Date().getTime() / 1000) - 20 * 60,
+        Math.floor(new Date().getTime() / 1000) + 20 * 60,
+        '1'
+      );
+
+      await contract.sale({ value: ethers.utils.parseEther('1') });
+
+      await expect(
+        contract.sale({ value: ethers.utils.parseEther('1') })
+      ).to.be.revertedWith('sale count limit');
     });
   });
 });

@@ -184,7 +184,7 @@ contract MacondoTableNFTMinterBlindBox is
 
     function _checkSaleLimit() internal view {
         if (saleLimit > 0 && soldCount >= saleLimit) {
-            revert(string(abi.encodePacked("sale limit")));
+            revert(string(abi.encodePacked("sale count limit")));
         }
     }
 
