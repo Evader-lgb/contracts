@@ -129,4 +129,11 @@ contract NFTStore is Initializable, ContextUpgradeable {
         }
         _;
     }
+
+    function getLeftSaleCount() public view returns (uint256) {
+        if (saleLimit == 0) {
+            return 0;
+        }
+        return saleLimit - soldCount;
+    }
 }
