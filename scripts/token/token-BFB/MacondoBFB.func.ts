@@ -1,5 +1,5 @@
 import { ethers } from 'hardhat';
-import { contractAddress } from '../../../deploy/token/token-BFB/MacondoBFB.deploy';
+import { contractAddress } from './MacondoBFB.deploy';
 const { CONTRACT_DEFAULT_CALLER_ADDRESS } = process.env;
 
 async function getContract() {
