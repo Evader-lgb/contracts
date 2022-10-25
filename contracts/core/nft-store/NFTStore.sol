@@ -5,10 +5,12 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 
 import "./INFTStoreItem.sol";
 
 contract NFTStore is Initializable, ContextUpgradeable {
+    using SafeMathUpgradeable for uint256;
     //event
     event SaleBox(address indexed to, uint256 indexed tokenId);
     event Withdraw(address indexed to, uint256 indexed amount);
@@ -75,14 +77,14 @@ contract NFTStore is Initializable, ContextUpgradeable {
         _saleBefore(to, tokenId, uri, price);
 
         //add sold count
-        soldCount++;
+        soldCount = soldCount.add(1);
         //mint token
         tokenContract.safeMint(to, tokenId, uri);
         //refund
         if (msg.value > price) {
             AddressUpgradeable.sendValue(
                 payable(msg.sender),
-                msg.value - price
+                msg.value.sub(price)
             );
         }
         //emit event
@@ -153,6 +155,6 @@ contract NFTStore is Initializable, ContextUpgradeable {
         if (saleLimit == 0) {
             return 0;
         }
-        return saleLimit - soldCount;
+        return saleLimit.sub(soldCount);
     }
 }
