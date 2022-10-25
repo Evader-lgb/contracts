@@ -39,10 +39,16 @@ async function main() {
       .grantRole(ethers.utils.id('SALE_ROLE'), CONTRACT_DEFAULT_CALLER_ADDRESS)
       .then(async (tx: any) => await tx.wait());
     //grant sale manage role to nft contract
-    console.log('grant sale manage role to caller');
     await contract
       .grantRole(
         ethers.utils.id('SALE_MANAGE_ROLE'),
+        CONTRACT_DEFAULT_CALLER_ADDRESS
+      )
+      .then(async (tx: any) => await tx.wait());
+
+    await contract
+      .grantRole(
+        ethers.utils.id('PAUSER_ROLE'),
         CONTRACT_DEFAULT_CALLER_ADDRESS
       )
       .then(async (tx: any) => await tx.wait());
