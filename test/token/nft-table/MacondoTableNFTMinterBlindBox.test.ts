@@ -8,6 +8,8 @@ describe('MacondoTableNFTMinterBlindBox', () => {
   let contract: Contract;
 
   beforeEach(async () => {
+    const [owner] = await ethers.getSigners();
+
     const MacondoTableNFT = await ethers.getContractFactory('MacondoTableNFT');
     macondoTableNFT = await upgrades.deployProxy(MacondoTableNFT);
     await macondoTableNFT.deployed();
@@ -17,6 +19,7 @@ describe('MacondoTableNFTMinterBlindBox', () => {
     );
     contract = await upgrades.deployProxy(MacondoTableNFTMinterBlindBox, [
       macondoTableNFT.address,
+      owner.address,
     ]);
     await contract.deployed();
 

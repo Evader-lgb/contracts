@@ -22,17 +22,23 @@ contract MacondoTableNFTMinterBlindBox is
     CountersUpgradeable.Counter private _tokenIdCounter;
 
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
+    bytes32 public constant SALE_MANAGE_ROLE = keccak256("SALE_MANAGE_ROLE");
     bytes32 public constant SALE_ROLE = keccak256("SALE_ROLE");
 
     //initial token id
     uint256 private initialTokenId;
+    // withdraw address
+    address internal withdrawAddress;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
         _disableInitializers();
     }
 
-    function initialize(INFTStoreItem _tokenContract) public initializer {
+    function initialize(
+        INFTStoreItem _tokenContract,
+        address payable _withdrawAddress
+    ) public initializer {
         __Pausable_init();
         __AccessControl_init();
         __ReentrancyGuard_init();
@@ -40,7 +46,10 @@ contract MacondoTableNFTMinterBlindBox is
 
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(PAUSER_ROLE, msg.sender);
+        _grantRole(SALE_MANAGE_ROLE, msg.sender);
         _grantRole(SALE_ROLE, msg.sender);
+
+        withdrawAddress = _withdrawAddress;
     }
 
     function pause() public onlyRole(PAUSER_ROLE) {
@@ -49,10 +58,6 @@ contract MacondoTableNFTMinterBlindBox is
 
     function unpause() public onlyRole(PAUSER_ROLE) {
         _unpause();
-    }
-
-    function withdraw() external onlyRole(DEFAULT_ADMIN_ROLE) {
-        _withdraw();
     }
 
     function _saleBefore(
@@ -70,9 +75,27 @@ contract MacondoTableNFTMinterBlindBox is
         uint256 _saleStartTime,
         uint256 _saleEndTime,
         uint256 _saleLimit
-    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    ) external onlyRole(SALE_MANAGE_ROLE) {
         _setSaleConfig(_salePeroiod, _salePrice, _saleStartTime, _saleEndTime);
         _setSaleLimit(_saleLimit);
+    }
+
+    function setInitialTokenId(uint256 _initialTokenId)
+        external
+        onlyRole(SALE_MANAGE_ROLE)
+    {
+        initialTokenId = _initialTokenId;
+    }
+
+    function setWithdrawAddress(address payable _withdrawAddress)
+        external
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        withdrawAddress = _withdrawAddress;
+    }
+
+    function withdraw() external nonReentrant onlyRole(SALE_MANAGE_ROLE) {
+        _withdraw(withdrawAddress);
     }
 
     function recoverSigner(bytes32 hash, bytes memory signature)
@@ -104,13 +127,6 @@ contract MacondoTableNFTMinterBlindBox is
         }
 
         _sale(to, tokenId, uri, price);
-    }
-
-    function setInitialTokenId(uint256 _initialTokenId)
-        external
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
-        initialTokenId = _initialTokenId;
     }
 
     function currentTokenId() public view returns (uint256) {

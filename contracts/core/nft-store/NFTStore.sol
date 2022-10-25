@@ -91,12 +91,9 @@ contract NFTStore is Initializable, ContextUpgradeable {
         emit SaleBox(to, tokenId);
     }
 
-    function _withdraw() internal {
-        AddressUpgradeable.sendValue(
-            payable(msg.sender),
-            address(this).balance
-        );
-        emit Withdraw(msg.sender, address(this).balance);
+    function _withdraw(address to) internal {
+        AddressUpgradeable.sendValue(payable(to), address(this).balance);
+        emit Withdraw(to, address(this).balance);
     }
 
     function _setSaleConfig(
