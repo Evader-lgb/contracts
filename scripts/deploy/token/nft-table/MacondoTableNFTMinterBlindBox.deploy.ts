@@ -12,12 +12,13 @@ import {
 const { CONTRACT_DEFAULT_CALLER_ADDRESS } = process.env;
 
 async function main() {
-  // const contractAddress = null;
-  //old nft contract address
-  const contractAddress = '0x17C3481F45E47966Cd29c7fE573f78B377baEf6d';
-
   const contractAddressOfMacondoTableNFT =
     '0x1A516d0E324575Fd6BdD2E54FB9cFcB6C8F3e7A4';
+
+  // const contractAddress = null;
+  //old nft contract address
+  const preContractAddress = null;
+  const contractAddress = '0xa2F2C17c0A17b9040711A6B9933E860D92D5B71f';
 
   const DeployContractName = 'MacondoTableNFTMinterBlindBox';
   if (contractAddress) {
@@ -26,17 +27,25 @@ async function main() {
       contractAddress
     );
   } else {
+    const [deployer] = await ethers.getSigners();
     const contract = await deployUpgradeProxy(DeployContractName, [
       contractAddressOfMacondoTableNFT,
+      deployer.address,
     ]);
 
     console.log('grant sale role to caller', CONTRACT_DEFAULT_CALLER_ADDRESS);
     //grant sale role to caller
-    await contract.grantRole(
-      ethers.utils.id('SALE_ROLE'),
-      CONTRACT_DEFAULT_CALLER_ADDRESS
-    );
-    console.log('done');
+    await contract
+      .grantRole(ethers.utils.id('SALE_ROLE'), CONTRACT_DEFAULT_CALLER_ADDRESS)
+      .then(async (tx: any) => await tx.wait());
+    //grant sale manage role to nft contract
+    console.log('grant sale manage role to caller');
+    await contract
+      .grantRole(
+        ethers.utils.id('SALE_MANAGE_ROLE'),
+        CONTRACT_DEFAULT_CALLER_ADDRESS
+      )
+      .then(async (tx: any) => await tx.wait());
 
     //grant minter role to nft contract
     const contractOfMacondoTableNFT = await ethers.getContractAt(
@@ -44,12 +53,17 @@ async function main() {
       contractAddressOfMacondoTableNFT
     );
 
+    console.log('revoke minter role from old nft contract');
+    //revoke minter role from old nft contract
+    if (preContractAddress) {
+      await contractOfMacondoTableNFT
+        .revokeRole(ethers.utils.id('MINTER_ROLE'), preContractAddress)
+        .then(async (tx: any) => await tx.wait());
+    }
     console.log('grant minter role to nft contract');
-    await contractOfMacondoTableNFT.grantRole(
-      ethers.utils.id('MINTER_ROLE'),
-      contract.address
-    );
-    console.log('done');
+    await contractOfMacondoTableNFT
+      .grantRole(ethers.utils.id('MINTER_ROLE'), contract.address)
+      .then(async (tx: any) => await tx.wait());
   }
 }
 

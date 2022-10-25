@@ -3,7 +3,7 @@ import { ethers } from 'hardhat';
 async function getContract() {
   const contract = await ethers.getContractAt(
     'MacondoTableNFTMinterBlindBox',
-    '0x17C3481F45E47966Cd29c7fE573f78B377baEf6d'
+    '0xa2F2C17c0A17b9040711A6B9933E860D92D5B71f'
   );
   const [owner] = await ethers.getSigners();
 
@@ -13,6 +13,7 @@ async function getContract() {
 async function setSaleConfig() {
   const contract = await getContract();
 
+  await contract.setInitialTokenId(110010);
   const tx = await contract.setSaleConfig(
     '1',
     ethers.utils.parseEther('0.05'),
@@ -21,8 +22,6 @@ async function setSaleConfig() {
     '10'
   );
   await tx.wait();
-
-  await contract.setInitialTokenId(110000);
 
   const saleConfig = await contract.defaultConfig();
   const saleLimit = await contract.saleLimit();
@@ -53,7 +52,8 @@ async function saleOne() {
 }
 
 async function main() {
-  await saleOne();
+  // await setSaleConfig();
+  // await saleOne();
 }
 
 // We recommend this pattern to be able to use async/await everywhere
