@@ -3,7 +3,7 @@ import { ethers } from 'hardhat';
 async function getContract() {
   const contract = await ethers.getContractAt(
     'MacondoTableNFTMinterBlindBox',
-    '0xa2F2C17c0A17b9040711A6B9933E860D92D5B71f'
+    '0x114dB974ADC69747F49bc9516429BA6ab332eCEB'
   );
   const [owner] = await ethers.getSigners();
 
@@ -24,12 +24,12 @@ async function setSaleConfig() {
   await tx.wait();
 
   const saleConfig = await contract.defaultConfig();
-  const saleLimit = await contract.saleLimit();
+  const totalSupply = await contract.totalSupply();
   const leftCount = await contract.getLeftSaleCount();
   const currentTokenId = await contract.currentTokenId();
 
   console.log('saleConfig', saleConfig);
-  console.log('saleLimit', saleLimit.toString());
+  console.log('totalSupply', totalSupply.toString());
   console.log('leftCount', leftCount.toString());
   console.log('currentTokenId', currentTokenId.toString());
 }
@@ -41,18 +41,18 @@ async function saleOne() {
   await tx.wait();
 
   const saleConfig = await contract.defaultConfig();
-  const saleLimit = await contract.saleLimit();
+  const totalSupply = await contract.totalSupply();
   const leftCount = await contract.getLeftSaleCount();
   const currentTokenId = await contract.currentTokenId();
 
   console.log('saleConfig', saleConfig);
-  console.log('saleLimit', saleLimit.toString());
+  console.log('totalSupply', totalSupply.toString());
   console.log('leftCount', leftCount.toString());
   console.log('currentTokenId', currentTokenId.toString());
 }
 
 async function main() {
-  // await setSaleConfig();
+  await setSaleConfig();
   // await saleOne();
 }
 

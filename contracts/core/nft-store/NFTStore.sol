@@ -38,7 +38,7 @@ contract NFTStore is Initializable, ContextUpgradeable {
     //current sold count
     uint256 public soldCount;
     //max sale count
-    uint256 public saleLimit;
+    uint256 public totalSupply;
 
     function __NFTMinterBlindBox_init(INFTStoreItem _tokenContract)
         internal
@@ -66,7 +66,7 @@ contract NFTStore is Initializable, ContextUpgradeable {
         uint256 tokenId,
         string memory uri,
         uint256 price
-    ) internal inSalePeriod checkSaleLimit {
+    ) internal inSalePeriod checkTotalSupply {
         //check money
         if (price <= 1) {
             revert(string(abi.encodePacked("price must be greater than 1")));
@@ -116,8 +116,8 @@ contract NFTStore is Initializable, ContextUpgradeable {
         defaultConfig.endTimestamp = _saleEndTime;
     }
 
-    function _setSaleLimit(uint256 _saleLimit) internal {
-        if (_saleLimit < soldCount) {
+    function _setTotalSupply(uint256 _totalSupply) internal {
+        if (_totalSupply < soldCount) {
             revert(
                 string(
                     abi.encodePacked(
@@ -127,7 +127,7 @@ contract NFTStore is Initializable, ContextUpgradeable {
             );
         }
 
-        saleLimit = _saleLimit;
+        totalSupply = _totalSupply;
     }
 
     modifier inSalePeriod() {
@@ -141,17 +141,17 @@ contract NFTStore is Initializable, ContextUpgradeable {
         _;
     }
 
-    modifier checkSaleLimit() {
-        if (saleLimit > 0 && soldCount >= saleLimit) {
+    modifier checkTotalSupply() {
+        if (totalSupply > 0 && soldCount >= totalSupply) {
             revert(string(abi.encodePacked("sale count limit")));
         }
         _;
     }
 
     function getLeftSaleCount() public view returns (uint256) {
-        if (saleLimit == 0) {
+        if (totalSupply == 0) {
             return 0;
         }
-        return saleLimit.sub(soldCount);
+        return totalSupply.sub(soldCount);
     }
 }
