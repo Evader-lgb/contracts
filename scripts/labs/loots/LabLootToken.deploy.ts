@@ -1,6 +1,6 @@
 // We recommend this pattern to be able to use async/await everywhere
 
-import { deployNormal } from '../utils/deploy.util';
+import { deployNormal } from '../../utils/deploy.util';
 
 async function deploy() {
   let labLootTokenAddress = '0x3f79f74FEeFBcD8B4E3AD1F1300016afc810dbfb';
