@@ -1,5 +1,7 @@
 import { ethers } from 'hardhat';
 
+const { CONTRACT_DEFAULT_CALLER_ADDRESS } = process.env;
+
 async function getContract() {
   const contract = await ethers.getContractAt(
     'MacondoTableNFTMinterBlindBox',
@@ -51,9 +53,21 @@ async function saleOne() {
   console.log('currentTokenId', currentTokenId.toString());
 }
 
+async function grantRole() {
+  const contract = await getContract();
+  const tx = await contract.grantRole(
+    ethers.utils.id('PAUSER_ROLE'),
+    CONTRACT_DEFAULT_CALLER_ADDRESS
+  );
+  await tx.wait();
+  console.log('grant pauser role to caller', CONTRACT_DEFAULT_CALLER_ADDRESS);
+}
+
 async function main() {
-  await setSaleConfig();
+  // await setSaleConfig();
   // await saleOne();
+
+  await grantRole();
 }
 
 // We recommend this pattern to be able to use async/await everywhere

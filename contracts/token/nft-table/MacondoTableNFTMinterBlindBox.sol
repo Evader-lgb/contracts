@@ -80,6 +80,27 @@ contract MacondoTableNFTMinterBlindBox is
         _setTotalSupply(_totalSupply);
     }
 
+    function setSaleConfigPrice(uint256 _salePrice)
+        external
+        onlyRole(SALE_MANAGE_ROLE)
+    {
+        _setSaleConfigPrice(_salePrice);
+    }
+
+    function setSaleConfigPeriod(uint256 _salePeriod)
+        external
+        onlyRole(SALE_MANAGE_ROLE)
+    {
+        _setSaleConfigPeriod(_salePeriod);
+    }
+
+    function setTotalSupply(uint256 _totalSupply)
+        external
+        onlyRole(SALE_MANAGE_ROLE)
+    {
+        _setTotalSupply(_totalSupply);
+    }
+
     function setInitialTokenId(uint256 _initialTokenId)
         external
         onlyRole(SALE_MANAGE_ROLE)

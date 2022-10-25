@@ -97,23 +97,40 @@ contract NFTStore is Initializable, ContextUpgradeable {
     }
 
     function _setSaleConfig(
-        uint256 _salePeroiod,
+        uint256 _salePeriod,
         uint256 _salePrice,
         uint256 _saleStartTime,
         uint256 _saleEndTime
     ) internal {
         //start time must be less than end time
-        if (_saleStartTime >= _saleEndTime) {
+        if (_saleStartTime > _saleEndTime) {
             revert(
                 string(
-                    abi.encodePacked("start time must be less than end time")
+                    abi.encodePacked(
+                        "start time must be less than end time,",
+                        StringsUpgradeable.toString(_saleStartTime),
+                        ">",
+                        StringsUpgradeable.toString(_saleEndTime)
+                    )
                 )
             );
         }
-        defaultConfig.period = _salePeroiod;
-        defaultConfig.price = _salePrice;
         defaultConfig.startTimestamp = _saleStartTime;
         defaultConfig.endTimestamp = _saleEndTime;
+        _setSaleConfigPeriod(_salePeriod);
+        _setSaleConfigPrice(_salePrice);
+    }
+
+    function _setSaleConfigPeriod(uint256 _salePeriod) internal {
+        defaultConfig.period = _salePeriod;
+    }
+
+    function _setSaleConfigPrice(uint256 _salePrice) internal {
+        //price must be greater than 0
+        if (_salePrice <= 0) {
+            revert(string(abi.encodePacked("price must be greater than 0")));
+        }
+        defaultConfig.price = _salePrice;
     }
 
     function _setTotalSupply(uint256 _totalSupply) internal {
