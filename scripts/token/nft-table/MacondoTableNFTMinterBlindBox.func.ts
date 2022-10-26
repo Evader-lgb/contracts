@@ -36,9 +36,24 @@ async function setSaleConfig() {
   console.log('currentTokenId', currentTokenId.toString());
 }
 
+async function getSaleConfig() {
+  const contract = await getContract();
+
+  const saleConfig = await contract.defaultConfig();
+  const totalSupply = await contract.totalSupply();
+  const leftCount = await contract.getLeftSaleCount();
+  const currentTokenId = await contract.currentTokenId();
+
+  console.log('saleConfig', saleConfig);
+  console.log('totalSupply', totalSupply.toString());
+  console.log('leftCount', leftCount.toString());
+  console.log('currentTokenId', currentTokenId.toString());
+}
+
 async function saleOne() {
   const contract = await getContract();
 
+  const soldTokenId = await contract.currentTokenId();
   const tx = await contract.sale({ value: ethers.utils.parseEther('0.05') });
   await tx.wait();
 
@@ -47,6 +62,7 @@ async function saleOne() {
   const leftCount = await contract.getLeftSaleCount();
   const currentTokenId = await contract.currentTokenId();
 
+  console.log(`soldTokenId ${soldTokenId.toString()}`);
   console.log('saleConfig', saleConfig);
   console.log('totalSupply', totalSupply.toString());
   console.log('leftCount', leftCount.toString());
@@ -65,9 +81,10 @@ async function grantRole() {
 
 async function main() {
   // await setSaleConfig();
-  // await saleOne();
+  // await getSaleConfig();
+  await saleOne();
 
-  await grantRole();
+  // await grantRole();
 }
 
 // We recommend this pattern to be able to use async/await everywhere

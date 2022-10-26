@@ -299,7 +299,7 @@ describe('MacondoTableNFTMinterBlindBox', () => {
     });
   });
 
-  describe.only('MacondoTableNFTMinterBlindBox:set Property', () => {
+  describe('MacondoTableNFTMinterBlindBox:set Property', () => {
     it('success:setSaleConfig', async () => {
       const startTimestamp = Math.floor(new Date().getTime() / 1000) - 20 * 60;
       const endTimestamp = Math.floor(new Date().getTime() / 1000) + 20 * 60;

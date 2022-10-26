@@ -181,7 +181,7 @@ contract MacondoTableNFTMinterBlindBox is
         return
             string(
                 abi.encodePacked(
-                    "meta/desk_",
+                    "meta/desk-",
                     StringsUpgradeable.toString(tokenId)
                 )
             );
