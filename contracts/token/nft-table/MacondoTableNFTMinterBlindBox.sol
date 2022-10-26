@@ -76,8 +76,13 @@ contract MacondoTableNFTMinterBlindBox is
         uint256 _saleEndTime,
         uint256 _totalSupply
     ) external onlyRole(SALE_MANAGE_ROLE) {
-        _setSaleConfig(_salePeroiod, _salePrice, _saleStartTime, _saleEndTime);
-        _setTotalSupply(_totalSupply);
+        _setSaleDefaultConfig(
+            _salePeroiod,
+            _salePrice,
+            _saleStartTime,
+            _saleEndTime,
+            _totalSupply
+        );
     }
 
     function setSaleConfigPrice(uint256 _salePrice)
@@ -87,11 +92,13 @@ contract MacondoTableNFTMinterBlindBox is
         _setSaleConfigPrice(_salePrice);
     }
 
-    function setSaleConfigPeriod(uint256 _salePeriod)
-        external
-        onlyRole(SALE_MANAGE_ROLE)
-    {
+    function setSaleConfigPeriod(
+        uint256 _salePeriod,
+        uint256 _saleStartTime,
+        uint256 _saleEndTime
+    ) external onlyRole(SALE_MANAGE_ROLE) {
         _setSaleConfigPeriod(_salePeriod);
+        _setSaleConfigSaleTime(_saleStartTime, _saleEndTime);
     }
 
     function setTotalSupply(uint256 _totalSupply)

@@ -96,9 +96,24 @@ contract NFTStore is Initializable, ContextUpgradeable {
         emit Withdraw(to, address(this).balance);
     }
 
-    function _setSaleConfig(
+    function _setSaleDefaultConfig(
         uint256 _salePeriod,
         uint256 _salePrice,
+        uint256 _saleStartTime,
+        uint256 _saleEndTime,
+        uint256 _totalSupply
+    ) internal {
+        _setSaleConfigPeriod(_salePeriod);
+        _setSaleConfigSaleTime(_saleStartTime, _saleEndTime);
+        _setSaleConfigPrice(_salePrice);
+        _setTotalSupply(_totalSupply);
+    }
+
+    function _setSaleConfigPeriod(uint256 _salePeriod) internal {
+        defaultConfig.period = _salePeriod;
+    }
+
+    function _setSaleConfigSaleTime(
         uint256 _saleStartTime,
         uint256 _saleEndTime
     ) internal {
@@ -117,12 +132,6 @@ contract NFTStore is Initializable, ContextUpgradeable {
         }
         defaultConfig.startTimestamp = _saleStartTime;
         defaultConfig.endTimestamp = _saleEndTime;
-        _setSaleConfigPeriod(_salePeriod);
-        _setSaleConfigPrice(_salePrice);
-    }
-
-    function _setSaleConfigPeriod(uint256 _salePeriod) internal {
-        defaultConfig.period = _salePeriod;
     }
 
     function _setSaleConfigPrice(uint256 _salePrice) internal {
