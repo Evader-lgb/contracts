@@ -42,6 +42,11 @@ module.exports = {
     timeout: 2 * 60 * 1000,
   },
   abiExporter: {
-    except: ['sample', 'tests', 'labs', 'core'],
+    except: [
+      'contracts/sample',
+      'contracts/tests',
+      'contracts/labs',
+      'contracts/core',
+    ],
   },
 };
