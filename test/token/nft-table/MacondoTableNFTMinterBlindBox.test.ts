@@ -298,4 +298,52 @@ describe('MacondoTableNFTMinterBlindBox', () => {
       ).to.be.revertedWith('not enough money');
     });
   });
+
+  describe.only('MacondoTableNFTMinterBlindBox:set Property', () => {
+    it('success:setSaleConfig', async () => {
+      const startTimestamp = Math.floor(new Date().getTime() / 1000) - 20 * 60;
+      const endTimestamp = Math.floor(new Date().getTime() / 1000) + 20 * 60;
+      await contract.setSaleConfig(
+        '1',
+        ethers.utils.parseEther('2'),
+        startTimestamp,
+        endTimestamp,
+        '50'
+      );
+
+      expect(await contract.soldCount()).to.equal(0);
+      const saleConfig = await contract.defaultConfig();
+      expect(saleConfig.period).to.equal(1);
+      expect(saleConfig.price).to.equal(ethers.utils.parseEther('2'));
+      expect(saleConfig.startTimestamp).to.equal(startTimestamp);
+      expect(saleConfig.endTimestamp).to.equal(endTimestamp);
+      expect(await contract.totalSupply()).to.equal(50);
+    });
+
+    it('success:setInitialTokenId', async () => {
+      await contract.setInitialTokenId(200000);
+      expect(await contract.currentTokenId()).to.equal(200000);
+    });
+
+    it('success:setSaleConfigPrice', async () => {
+      await contract.setSaleConfigPrice(ethers.utils.parseEther('2'));
+      const saleConfig = await contract.defaultConfig();
+      expect(saleConfig.price).to.equal(ethers.utils.parseEther('2'));
+    });
+
+    it('success:setSaleConfigPeriod', async () => {
+      const startTimestamp = Math.floor(new Date().getTime() / 1000) - 20 * 60;
+      const endTimestamp = Math.floor(new Date().getTime() / 1000) + 20 * 60;
+      await contract.setSaleConfigPeriod(1, startTimestamp, endTimestamp);
+      const saleConfig = await contract.defaultConfig();
+      expect(saleConfig.period).to.equal(1);
+      expect(saleConfig.startTimestamp).to.equal(startTimestamp);
+      expect(saleConfig.endTimestamp).to.equal(endTimestamp);
+    });
+
+    it('success:setTotalSupply', async () => {
+      await contract.setTotalSupply(100);
+      expect(await contract.totalSupply()).to.equal(100);
+    });
+  });
 });
