@@ -10,23 +10,20 @@ import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 
 import "../../core/nft-store/NFTStore.sol";
+import "../../core/nft-store/NFTStoreSellerIncrease.sol";
 
 contract MacondoTableNFTMinterBlindBox is
     Initializable,
     PausableUpgradeable,
     AccessControlUpgradeable,
     ReentrancyGuardUpgradeable,
-    NFTStore
+    NFTStore,
+    NFTStoreSellerIncrease
 {
-    using CountersUpgradeable for CountersUpgradeable.Counter;
-    CountersUpgradeable.Counter private _tokenIdCounter;
-
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant SALE_MANAGE_ROLE = keccak256("SALE_MANAGE_ROLE");
     bytes32 public constant SALE_ROLE = keccak256("SALE_ROLE");
 
-    //initial token id
-    uint256 private initialTokenId;
     // withdraw address
     address internal withdrawAddress;
 
@@ -43,6 +40,7 @@ contract MacondoTableNFTMinterBlindBox is
         __AccessControl_init();
         __ReentrancyGuard_init();
         __NFTMinterBlindBox_init(_tokenContract);
+        __NFTStoreSellerIncrease_init();
 
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(PAUSER_ROLE, msg.sender);
@@ -120,13 +118,7 @@ contract MacondoTableNFTMinterBlindBox is
         external
         onlyRole(SALE_MANAGE_ROLE)
     {
-        // check initial token id is not in sold list
-        if (soldList[_initialTokenId] != address(0)) {
-            revert("initial token id is in sold list");
-        }
-
-        initialTokenId = _initialTokenId;
-        _tokenIdCounter.reset();
+        _setInitialTokenId(_initialTokenId);
     }
 
     function setWithdrawAddress(address payable _withdrawAddress)
@@ -171,28 +163,15 @@ contract MacondoTableNFTMinterBlindBox is
         _sale(to, tokenId, uri, price);
     }
 
-    function currentTokenId() public view returns (uint256) {
-        return _tokenIdCounter.current() + initialTokenId;
-    }
-
     //sale
     function sale() external payable nonReentrant {
-        address _to = _msgSender();
-        _increaseSale(_to);
+        _saleWithIncreaseTokenId(_msgSender());
     }
 
-    function _increaseSale(address to) internal virtual {
-        uint256 _tokenId = currentTokenId();
-        _tokenIdCounter.increment();
-
-        string memory _uri = _itemTokenURI(_tokenId);
-        _sale(to, _tokenId, _uri, defaultConfig.price);
-    }
-
-    function _itemTokenURI(uint256 tokenId)
+    function _StoreItemTokenURI(uint256 tokenId)
         internal
-        view
-        virtual
+        pure
+        override
         returns (string memory)
     {
         return
