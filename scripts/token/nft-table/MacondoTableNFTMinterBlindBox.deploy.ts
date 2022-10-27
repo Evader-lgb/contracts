@@ -18,7 +18,7 @@ async function main() {
   // const contractAddress = null;
   //old nft contract address
   const preContractAddress = null;
-  const contractAddress = '0x114dB974ADC69747F49bc9516429BA6ab332eCEB';
+  const contractAddress = '0x55Cc50499747951d9fDD66D9867c00b8EbFA5d66';
 
   const DeployContractName = 'MacondoTableNFTMinterBlindBox';
   if (contractAddress) {

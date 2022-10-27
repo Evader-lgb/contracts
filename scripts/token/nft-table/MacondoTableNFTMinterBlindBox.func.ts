@@ -1,3 +1,4 @@
+import { BigNumberish } from 'ethers';
 import { ethers } from 'hardhat';
 
 const { CONTRACT_DEFAULT_CALLER_ADDRESS } = process.env;
@@ -5,23 +6,23 @@ const { CONTRACT_DEFAULT_CALLER_ADDRESS } = process.env;
 async function getContract() {
   const contract = await ethers.getContractAt(
     'MacondoTableNFTMinterBlindBox',
-    '0x114dB974ADC69747F49bc9516429BA6ab332eCEB'
+    '0x55Cc50499747951d9fDD66D9867c00b8EbFA5d66'
   );
   const [owner] = await ethers.getSigners();
 
   return contract.connect(owner);
 }
 
-async function setSaleConfig() {
+async function setSaleConfig(initTokenId: BigNumberish) {
   const contract = await getContract();
 
-  await contract.setInitialTokenId(110010);
+  await contract.setInitialTokenId(initTokenId);
   const tx = await contract.setSaleConfig(
     '1',
     ethers.utils.parseEther('0.05'),
     Math.floor(new Date().getTime() / 1000) - 20 * 60,
     Math.floor(new Date().getTime() / 1000) + 10 * 24 * 60 * 60,
-    '10'
+    '7'
   );
   await tx.wait();
 
@@ -86,12 +87,18 @@ async function grantRole() {
   console.log('grant pauser role to caller', CONTRACT_DEFAULT_CALLER_ADDRESS);
 }
 
+async function withdraw() {
+  const contract = await getContract();
+  const tx = await contract.withdraw();
+  await tx.wait();
+  console.log('withdraw success!');
+}
+
 async function main() {
-  // await setSaleConfig();
+  // await setSaleConfig('110013');
   // await getSaleConfig();
   await saleOne();
-
-  // await grantRole();
+  // await withdraw();
 }
 
 // We recommend this pattern to be able to use async/await everywhere
