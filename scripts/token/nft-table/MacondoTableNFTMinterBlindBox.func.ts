@@ -54,7 +54,10 @@ async function saleOne() {
   const contract = await getContract();
 
   const soldTokenId = await contract.currentTokenId();
-  const tx = await contract.sale({ value: ethers.utils.parseEther('0.05') });
+  const [custom] = await ethers.getSigners();
+  const tx = await contract
+    .connect(custom)
+    .sale({ value: ethers.utils.parseEther('0.05') });
   await tx.wait();
 
   const saleConfig = await contract.defaultConfig();
@@ -62,7 +65,11 @@ async function saleOne() {
   const leftCount = await contract.getLeftSaleCount();
   const currentTokenId = await contract.currentTokenId();
 
-  console.log(`soldTokenId ${soldTokenId.toString()}`);
+  console.log(
+    `sold Success!custom Address: ${
+      custom.address
+    }, TokenId:${soldTokenId.toString()}`
+  );
   console.log('saleConfig', saleConfig);
   console.log('totalSupply', totalSupply.toString());
   console.log('leftCount', leftCount.toString());
