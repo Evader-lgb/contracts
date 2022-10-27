@@ -40,6 +40,9 @@ contract NFTStore is Initializable, ContextUpgradeable {
     //max sale count
     uint256 public totalSupply;
 
+    //sold list
+    mapping(uint256 => address) public soldList;
+
     function __NFTMinterBlindBox_init(INFTStoreItem _tokenContract)
         internal
         onlyInitializing
@@ -74,10 +77,17 @@ contract NFTStore is Initializable, ContextUpgradeable {
         if (msg.value < price) {
             revert(string(abi.encodePacked("not enough money")));
         }
-        _saleBefore(to, tokenId, uri, price);
+        //check sold list
+        if (soldList[tokenId] != address(0)) {
+            revert(string(abi.encodePacked("token already sold")));
+        }
 
+        _saleBefore(to, tokenId, uri, price);
         //add sold count
         soldCount = soldCount.add(1);
+        //add sold list
+        soldList[tokenId] = to;
+
         //mint token
         tokenContract.safeMint(to, tokenId, uri);
         //refund
@@ -140,6 +150,20 @@ contract NFTStore is Initializable, ContextUpgradeable {
             revert(string(abi.encodePacked("price must be greater than 0")));
         }
         defaultConfig.price = _salePrice;
+    }
+
+    function _setSoldCount(uint256 _soldCount) internal {
+        //check sold count
+        if (_soldCount > totalSupply) {
+            revert(
+                string(
+                    abi.encodePacked(
+                        "sold count must be less than total supply"
+                    )
+                )
+            );
+        }
+        soldCount = _soldCount;
     }
 
     function _setTotalSupply(uint256 _totalSupply) internal {

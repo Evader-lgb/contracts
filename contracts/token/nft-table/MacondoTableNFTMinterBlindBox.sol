@@ -108,11 +108,25 @@ contract MacondoTableNFTMinterBlindBox is
         _setTotalSupply(_totalSupply);
     }
 
+    function resetSoldCount() external onlyRole(SALE_MANAGE_ROLE) {
+        _setSoldCount(0);
+    }
+
+    /**
+     * initial token id to start
+     * also initial token id counter
+     */
     function setInitialTokenId(uint256 _initialTokenId)
         external
         onlyRole(SALE_MANAGE_ROLE)
     {
+        // check initial token id is not in sold list
+        if (soldList[_initialTokenId] != address(0)) {
+            revert("initial token id is in sold list");
+        }
+
         initialTokenId = _initialTokenId;
+        _tokenIdCounter.reset();
     }
 
     function setWithdrawAddress(address payable _withdrawAddress)
@@ -164,15 +178,18 @@ contract MacondoTableNFTMinterBlindBox is
     //sale
     function sale() external payable nonReentrant {
         address _to = _msgSender();
-
-        uint256 _tokenId = _tokenIdCounter.current() + initialTokenId;
-        _tokenIdCounter.increment();
-
-        string memory _uri = _tokenURI(_tokenId);
-        _sale(_to, _tokenId, _uri, defaultConfig.price);
+        _increaseSale(_to);
     }
 
-    function _tokenURI(uint256 tokenId)
+    function _increaseSale(address to) internal virtual {
+        uint256 _tokenId = currentTokenId();
+        _tokenIdCounter.increment();
+
+        string memory _uri = _itemTokenURI(_tokenId);
+        _sale(to, _tokenId, _uri, defaultConfig.price);
+    }
+
+    function _itemTokenURI(uint256 tokenId)
         internal
         view
         virtual

@@ -323,6 +323,23 @@ describe('MacondoTableNFTMinterBlindBox', () => {
     it('success:setInitialTokenId', async () => {
       await contract.setInitialTokenId(200000);
       expect(await contract.currentTokenId()).to.equal(200000);
+      //sale
+      await contract.setSaleConfig(
+        '1',
+        ethers.utils.parseEther('1'),
+        Math.floor(new Date().getTime() / 1000) - 20 * 60,
+        Math.floor(new Date().getTime() / 1000) + 20 * 60,
+        '50'
+      );
+
+      await contract.sale({ value: ethers.utils.parseEther('1') });
+      expect(await contract.currentTokenId()).to.equal(200001);
+
+      await expect(contract.setInitialTokenId(200000)).revertedWith(
+        'initial token id is in sold list'
+      );
+      await contract.setInitialTokenId(200001);
+      expect(await contract.currentTokenId()).to.equal(200001);
     });
 
     it('success:setSaleConfigPrice', async () => {
