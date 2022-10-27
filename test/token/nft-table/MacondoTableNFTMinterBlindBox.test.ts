@@ -206,10 +206,21 @@ describe('MacondoTableNFTMinterBlindBox', () => {
       await expect(contract.sale({ value: ethers.utils.parseEther('1') }))
         .to.emit(contract, 'SaleBox')
         .withArgs(owner.address, 200000);
+      //check nft token
+      expect(await macondoTableNFT.ownerOf(200000)).to.equal(owner.address);
+      expect(await macondoTableNFT.tokenURI(200000)).to.equal(
+        'https://macondo-nft-storage.s3.us-west-1.amazonaws.com/meta/desk-200000'
+      );
 
       await expect(contract.sale({ value: ethers.utils.parseEther('1') }))
         .to.emit(contract, 'SaleBox')
         .withArgs(owner.address, 200001);
+
+      //check nft token
+      expect(await macondoTableNFT.ownerOf(200001)).to.equal(owner.address);
+      expect(await macondoTableNFT.tokenURI(200001)).to.equal(
+        'https://macondo-nft-storage.s3.us-west-1.amazonaws.com/meta/desk-200001'
+      );
     });
 
     it('fail:not in period', async () => {
