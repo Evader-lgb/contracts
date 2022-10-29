@@ -33,6 +33,12 @@ module.exports = {
       gasPrice: 20000000000,
       accounts: [`0x${PRIVATE_KEY}`],
     },
+    bsc_local: {
+      url: 'http://127.0.0.1:8545',
+      chainId: 1337,
+      gasPrice: 20000000000,
+      accounts: [`0x${PRIVATE_KEY}`],
+    },
     mumbai: {
       url: ALCHEMY_API_TESTNET_URL,
       accounts: [`0x${PRIVATE_KEY}`],
