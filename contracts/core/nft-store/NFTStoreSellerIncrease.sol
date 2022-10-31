@@ -57,7 +57,7 @@ contract NFTStoreSellerIncrease is Initializable, NFTStore {
         virtual
         returns (string memory)
     {
-        return string(abi.encodePacked(StringsUpgradeable.toString(tokenId)));
+        return StringsUpgradeable.toString(tokenId);
     }
 
     /**

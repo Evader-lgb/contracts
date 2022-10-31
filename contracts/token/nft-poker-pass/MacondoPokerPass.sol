@@ -9,6 +9,8 @@ import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol"
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
+import "../../core/nft-store/INFTStoreItem.sol";
+
 contract MacondoPokerPass is
     Initializable,
     ERC721Upgradeable,
@@ -16,6 +18,7 @@ contract MacondoPokerPass is
     ERC721URIStorageUpgradeable,
     PausableUpgradeable,
     AccessControlUpgradeable,
+    INFTStoreItem,
     UUPSUpgradeable
 {
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
@@ -53,7 +56,7 @@ contract MacondoPokerPass is
         address to,
         uint256 tokenId,
         string memory uri
-    ) public onlyRole(MINTER_ROLE) {
+    ) external override onlyRole(MINTER_ROLE) {
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
     }

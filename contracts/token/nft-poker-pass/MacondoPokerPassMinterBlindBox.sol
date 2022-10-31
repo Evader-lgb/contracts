@@ -11,7 +11,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "../../core/nft-store/NFTStore.sol";
 import "../../core/nft-store/NFTStoreSellerIncrease.sol";
 
-contract MacondoTableNFTMinterBlindBox is
+contract MacondoPokerPassMinterBlindBox is
     Initializable,
     PausableUpgradeable,
     AccessControlUpgradeable,
@@ -39,9 +39,9 @@ contract MacondoTableNFTMinterBlindBox is
         __Pausable_init();
         __AccessControl_init();
         __ReentrancyGuard_init();
+        __UUPSUpgradeable_init();
         __NFTMinterBlindBox_init(_tokenContract);
         __NFTStoreSellerIncrease_init();
-        __UUPSUpgradeable_init();
 
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(PAUSER_ROLE, msg.sender);
@@ -147,16 +147,9 @@ contract MacondoTableNFTMinterBlindBox is
     function _StoreItemTokenURI(uint256 tokenId)
         internal
         pure
-        virtual
         override
         returns (string memory)
     {
-        return
-            string(
-                abi.encodePacked(
-                    "meta/desk-",
-                    StringsUpgradeable.toString(tokenId)
-                )
-            );
+        return StringsUpgradeable.toString(tokenId);
     }
 }
