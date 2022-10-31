@@ -85,6 +85,11 @@ contract MacondoPokerPass is
         super._burn(tokenId);
     }
 
+    function _baseURI() internal pure override returns (string memory) {
+        return
+            "https://macondo-nft-storage.s3.us-west-1.amazonaws.com/meta/poker-pass-";
+    }
+
     function tokenURI(uint256 tokenId)
         public
         view
