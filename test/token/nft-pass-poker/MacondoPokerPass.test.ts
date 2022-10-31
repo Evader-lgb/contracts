@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { Contract } from 'ethers';
 import { ethers, upgrades } from 'hardhat';
 
-describe.only('MacondoPokerPass', function () {
+describe('MacondoPokerPass', function () {
   let macondoTableNFT: Contract;
 
   it('MacondoPokerPass:Deploy Test', async function () {

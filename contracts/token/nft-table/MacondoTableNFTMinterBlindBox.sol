@@ -4,7 +4,6 @@ pragma solidity ^0.8.4;
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/cryptography/ECDSAUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 
@@ -129,37 +128,6 @@ contract MacondoTableNFTMinterBlindBox is
 
     function withdraw() external nonReentrant onlyRole(SALE_MANAGE_ROLE) {
         _withdraw(withdrawAddress);
-    }
-
-    function recoverSigner(bytes32 hash, bytes memory signature)
-        public
-        pure
-        returns (address)
-    {
-        bytes32 ethSign = ECDSAUpgradeable.toEthSignedMessageHash(hash);
-        return ECDSAUpgradeable.recover(ethSign, signature);
-    }
-
-    function buyWithSaleRoleSign(
-        uint256 tokenId,
-        string memory uri,
-        uint256 price,
-        bytes memory signature
-    ) external payable nonReentrant {
-        address to = _msgSender();
-        address signer = recoverSigner(
-            keccak256(abi.encodePacked(to, tokenId, price)),
-            signature
-        );
-
-        if (!hasRole(SALE_ROLE, signer)) {
-            revert ErrorSaleRoleSignature(signer);
-        }
-        if (to == signer) {
-            revert ErrorSaleRoleCannotSaleToSelf();
-        }
-
-        _sale(to, tokenId, uri, price);
     }
 
     //sale

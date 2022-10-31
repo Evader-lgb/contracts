@@ -41,7 +41,7 @@ describe('MacondoTableNFTMinterBlindBox', () => {
     expect(defaultConfig.endTimestamp).to.equal('0');
   });
 
-  describe('MacondoTableNFTMinterBlindBox:buyWithSaleRoleSign', () => {
+  describe.skip('MacondoTableNFTMinterBlindBox:buyWithSaleRoleSign', () => {
     beforeEach(async () => {
       await contract.setSaleConfig(
         '1',
