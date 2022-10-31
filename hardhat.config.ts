@@ -2,6 +2,7 @@ import '@nomiclabs/hardhat-waffle';
 import 'dotenv/config';
 import { task } from 'hardhat/config';
 
+import '@openzeppelin/hardhat-defender';
 import '@openzeppelin/hardhat-upgrades';
 import 'hardhat-abi-exporter';
 
@@ -54,5 +55,9 @@ module.exports = {
       'contracts/labs',
       'contracts/core',
     ],
+  },
+  defender: {
+    apiKey: process.env.CONTRACT_DEPLOYER_DEFENDER_TEAM_API_KEY,
+    apiSecret: process.env.CONTRACT_DEPLOYER_DEFENDER_API_SECRET_KEY,
   },
 };

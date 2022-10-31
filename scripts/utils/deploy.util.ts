@@ -1,5 +1,6 @@
-import { Contract } from 'ethers';
-import hre, { ethers, upgrades } from 'hardhat';
+import { DeployProxyOptions } from '@openzeppelin/hardhat-upgrades/dist/utils';
+import { Contract, ContractFactory } from 'ethers';
+import hre, { defender, ethers, upgrades } from 'hardhat';
 
 /**
  *
@@ -32,7 +33,7 @@ async function _deploy(
     ethers.utils.formatEther(deployerBalance.sub(deployerBalanceAfter))
   );
   console.log(
-    '[deploy contract]:deploy contract: [%s] complete! address %s',
+    '[deploy contract]:deploy complete! contract: [%s] deployed to: %s',
     DeployContractName,
     deployContract.address
   );
@@ -62,13 +63,14 @@ export async function deployNormal(
  */
 export async function deployUpgradeProxy(
   contractName: string,
-  args?: unknown[]
+  args?: unknown[],
+  opts?: DeployProxyOptions
 ): Promise<Contract> {
   const DeployContractName = contractName;
   const DeployContract = await hre.ethers.getContractFactory(
     DeployContractName
   );
-  const deployContract = await upgrades.deployProxy(DeployContract, args);
+  const deployContract = await upgrades.deployProxy(DeployContract, args, opts);
   return _deploy(DeployContractName, deployContract);
 }
 /**
@@ -81,13 +83,35 @@ export async function deployUpgradeUpdate(
   contractName: string,
   contractAddress: string
 ): Promise<Contract> {
+  console.log('[deploy contract]:deploy [%s] upgrade ...', contractName);
   const DeployContractName = contractName;
-  const DeployContract = await hre.ethers.getContractFactory(
-    DeployContractName
-  );
+  const DeployContract = await getContractFactory(DeployContractName);
   const deployContract = await upgrades.upgradeProxy(
     contractAddress,
     DeployContract
   );
   return _deploy(DeployContractName, deployContract);
+}
+
+/**
+ * 更新可升级合约(通过 defender proposal)
+ * @param contractName 合约名称
+ * @param contractAddress  合约地址
+ * @returns
+ */
+export async function deployUpgradeUpdateWithProposal(
+  contractName: string,
+  contractAddress: string
+): Promise<void> {
+  console.log('[deploy contract]:deploy [%s] upgrade ...', contractName);
+  const Contract = await getContractFactory(contractName);
+  console.log('Preparing proposal...');
+  const proposal = await defender.proposeUpgrade(contractAddress, Contract);
+  console.log('Upgrade proposal created at:', proposal.url);
+}
+
+export async function getContractFactory(
+  contractName: string
+): Promise<ContractFactory> {
+  return hre.ethers.getContractFactory(contractName);
 }
