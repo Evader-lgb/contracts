@@ -42,6 +42,8 @@ contract NFTStore is Initializable, ContextUpgradeable {
 
     //sold list
     mapping(uint256 => address) public soldList;
+    //sold count by address
+    mapping(address => uint256) public soldCountByAddress;
 
     function __NFTMinterBlindBox_init(INFTStoreItem _tokenContract)
         internal
@@ -58,6 +60,13 @@ contract NFTStore is Initializable, ContextUpgradeable {
     }
 
     function _saleBefore(
+        address to,
+        uint256 tokenId,
+        string memory uri,
+        uint256 price
+    ) internal virtual {}
+
+    function _saleAfter(
         address to,
         uint256 tokenId,
         string memory uri,
@@ -88,6 +97,9 @@ contract NFTStore is Initializable, ContextUpgradeable {
         //add sold list
         soldList[tokenId] = to;
 
+        //add sold count by address
+        soldCountByAddress[to] = soldCountByAddress[to].add(1);
+
         //mint token
         tokenContract.safeMint(to, tokenId, uri);
         //refund
@@ -97,6 +109,8 @@ contract NFTStore is Initializable, ContextUpgradeable {
                 msg.value.sub(price)
             );
         }
+
+        _saleAfter(to, tokenId, uri, price);
         //emit event
         emit SaleBox(to, tokenId);
     }
@@ -203,6 +217,24 @@ contract NFTStore is Initializable, ContextUpgradeable {
             return 0;
         }
         return totalSupply.sub(soldCount);
+    }
+
+    //@dev 单一地址限制购买数量
+    function _guardLimitSoldCountByAddress(address to, uint256 limit)
+        internal
+        view
+    {
+        if (limit > 0 && soldCountByAddress[to] >= limit) {
+            revert(
+                string(
+                    abi.encodePacked(
+                        "sold count limit ",
+                        StringsUpgradeable.toString(limit),
+                        " each address!"
+                    )
+                )
+            );
+        }
     }
 
     /**
