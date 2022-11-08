@@ -2,10 +2,10 @@ import { expect } from 'chai';
 import { Contract } from 'ethers';
 import { ethers, upgrades } from 'hardhat';
 
-describe.only('MacondoPokerPass', function () {
+describe('MacondoPokerPass', () => {
   let macondoTableNFT: Contract;
 
-  it('MacondoPokerPass:Deploy Test', async function () {
+  it('MacondoPokerPass:Deploy Test', async () => {
     const MacondoTableNFT = await ethers.getContractFactory('MacondoPokerPass');
     macondoTableNFT = await upgrades.deployProxy(MacondoTableNFT);
     const address = await (await macondoTableNFT.deployed()).address;
@@ -15,7 +15,7 @@ describe.only('MacondoPokerPass', function () {
     expect(await macondoTableNFT.symbol()).to.equal('THP-PAS');
   });
 
-  it('MacondoPokerPass:safeMint Test', async function () {
+  it('MacondoPokerPass:safeMint Test', async () => {
     const [owner] = await ethers.getSigners();
     const tokenId = '1';
     const tokenURI = '1';

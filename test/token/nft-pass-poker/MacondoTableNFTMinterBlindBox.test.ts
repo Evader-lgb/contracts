@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { Contract } from 'ethers';
 import { ethers, upgrades } from 'hardhat';
 
-describe.only('MacondoPokerPassMinterBlindBox', () => {
+describe('MacondoPokerPassMinterBlindBox', () => {
   let macondoPokerPass: Contract;
   let contract: Contract;
 
