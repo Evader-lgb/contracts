@@ -12,7 +12,7 @@ describe('AccountBurn', () => {
     await token.deployed();
 
     const AccountBurn = await ethers.getContractFactory('AccountBurn');
-    accountBurn = await upgrades.deployProxy(AccountBurn, [token.address]);
+    accountBurn = await upgrades.deployProxy(AccountBurn);
     await accountBurn.deployed();
   });
 
@@ -28,13 +28,13 @@ describe('AccountBurn', () => {
 
     expect(await token.totalSupply()).to.equal(totalSupply.add(amount));
 
-    expect(await accountBurn.balance()).to.equal(amount);
+    expect(await accountBurn.balance(token.address)).to.equal(amount);
 
-    await expect(accountBurn.burn())
+    await expect(accountBurn.burn(token.address))
       .to.emit(accountBurn, 'BurnToken')
-      .withArgs(accountBurnAddress, amount);
+      .withArgs(token.address, amount);
 
-    expect(await accountBurn.balance()).to.equal('0');
+    expect(await accountBurn.balance(token.address)).to.equal('0');
     expect(await token.totalSupply()).to.equal(totalSupply);
   });
 });

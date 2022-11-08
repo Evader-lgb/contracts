@@ -18,19 +18,14 @@ contract AccountBurn is
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
 
     //event
-    event BurnToken(address indexed from, uint256 amount);
-
-    ERC20BurnableUpgradeable public tokenBurn;
+    event BurnToken(ERC20BurnableUpgradeable indexed token, uint256 amount);
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
         _disableInitializers();
     }
 
-    function initialize(ERC20BurnableUpgradeable _tokenBurn)
-        public
-        initializer
-    {
+    function initialize() public initializer {
         __Pausable_init();
         __AccessControl_init();
         __UUPSUpgradeable_init();
@@ -39,8 +34,6 @@ contract AccountBurn is
         _grantRole(PAUSER_ROLE, msg.sender);
         _grantRole(UPGRADER_ROLE, msg.sender);
         _grantRole(BURNER_ROLE, msg.sender);
-
-        tokenBurn = _tokenBurn;
     }
 
     function pause() public onlyRole(PAUSER_ROLE) {
@@ -57,18 +50,22 @@ contract AccountBurn is
         onlyRole(UPGRADER_ROLE)
     {}
 
-    function burn() public onlyRole(BURNER_ROLE) {
-        uint256 _balance = balance();
+    function burn(ERC20BurnableUpgradeable token) public onlyRole(BURNER_ROLE) {
+        uint256 _balance = balance(token);
         if (_balance < 1 ether) {
             revert(
                 "AccountBurn: burn: balance of this contract is less than 1 ether"
             );
         }
-        tokenBurn.burn(_balance);
-        emit BurnToken(address(this), _balance);
+        token.burn(_balance);
+        emit BurnToken(token, _balance);
     }
 
-    function balance() public view returns (uint256) {
-        return tokenBurn.balanceOf(address(this));
+    function balance(ERC20BurnableUpgradeable token)
+        public
+        view
+        returns (uint256)
+    {
+        return token.balanceOf(address(this));
     }
 }

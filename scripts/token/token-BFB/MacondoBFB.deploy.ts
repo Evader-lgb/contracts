@@ -1,11 +1,12 @@
 // We require the Hardhat Runtime Environment explicitly here. This is optional
 
+import { ContractDeployAddress } from '../../consts/deploy.address.const';
 import {
   deployUpgradeProxy,
   deployUpgradeUpdate,
 } from '../../utils/deploy.util';
 
-export const contractAddress = '0x849Ac2eAF42C7239A1f807f250928Eac23376C63';
+export const contractAddress = ContractDeployAddress.MacondoBFB;
 
 async function main() {
   // We get the contract to deploy

@@ -8,13 +8,10 @@ const {
   PRIVATE_KEY_RANDOM_CONSUMER_CONTRACT_CALLER,
 } = process.env;
 
-//已经部署和合约地址
-export const deployedContractAddress = ContractDeployAddress.MacondoPokerPass;
-
 async function main() {
-  const contractAddress = deployedContractAddress;
+  const contractAddress = ContractDeployAddress.AccountBurn;
 
-  const DeployContractName = 'MacondoPokerPass';
+  const DeployContractName = 'AccountBurn';
   if (contractAddress) {
     const contract = await deployUpgradeUpdate(
       DeployContractName,
