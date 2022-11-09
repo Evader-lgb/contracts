@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { Contract } from 'ethers';
-import { ethers } from 'hardhat';
+import { ethers, upgrades } from 'hardhat';
 
 const { ALCHEMY_API_MAINNET_URL, PRIVATE_KEY } = process.env;
 describe('TokenTransfer', function () {
@@ -8,7 +8,7 @@ describe('TokenTransfer', function () {
   let macondoUSDTAddress: string;
   beforeEach(async function () {
     const MacondoUSDT = await ethers.getContractFactory('MacondoUSDT');
-    macondoUSDT = await MacondoUSDT.deploy();
+    macondoUSDT = await upgrades.deployProxy(MacondoUSDT);
     const macondoUSDTDeploy = await macondoUSDT.deployed();
     macondoUSDTAddress = macondoUSDTDeploy.address;
   });

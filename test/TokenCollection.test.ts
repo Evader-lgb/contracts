@@ -47,7 +47,7 @@ describe('Contract TokenCollection', function () {
 
   it('TokenCollection Transfer And withdraw ERC20 Test', async function () {
     const MacondoUSDT = await ethers.getContractFactory('MacondoUSDT');
-    const macondoUSDT = await MacondoUSDT.deploy();
+    const macondoUSDT = await upgrades.deployProxy(MacondoUSDT);
     await macondoUSDT.deployed();
 
     const [owner, addr1, addr2, addr3] = await ethers.getSigners();

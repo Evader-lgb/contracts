@@ -73,7 +73,7 @@ describe('FundCollection', function () {
 
     console.log('address', address);
     const MacondoUSDT = await ethers.getContractFactory('MacondoUSDT');
-    const macondoUSDT = await MacondoUSDT.deploy();
+    const macondoUSDT = await upgrades.deployProxy(MacondoUSDT);
     const macondoUSDTDeploy = await macondoUSDT.deployed();
     const macondoUSDTAddress = macondoUSDTDeploy.address;
     console.log('macondoUSDTAddress', macondoUSDTAddress);
@@ -120,7 +120,7 @@ describe('FundCollection', function () {
     console.log('fundCollection address', fundCollectionAddress);
 
     const MacondoUSDT = await ethers.getContractFactory('MacondoUSDT');
-    const macondoUSDT = await MacondoUSDT.deploy();
+    const macondoUSDT = await upgrades.deployProxy(MacondoUSDT);
     const macondoUSDTDeploy = await macondoUSDT.deployed();
     const macondoUSDTAddress = macondoUSDTDeploy.address;
     console.log('macondoUSDTAddress', macondoUSDTAddress);
