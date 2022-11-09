@@ -72,7 +72,7 @@ contract MacondoPokerPassMinterBlindBox is
         uint256 price
     ) internal override whenNotPaused {
         //限制每个地址只能购买一次
-        _guardLimitSoldCountByAddress(to, 1);
+        // _guardLimitSoldCountByAddress(to, 1);
         super._saleBefore(to, tokenId, uri, price);
     }
 
