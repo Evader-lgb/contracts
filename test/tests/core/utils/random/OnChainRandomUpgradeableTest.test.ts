@@ -55,6 +55,20 @@ describe('OnChainRandomUpgradeableTest', () => {
   });
 
   it('should return a random number with a seed and index', async () => {
+    //seed:0x814cc265bde15991d28d4212ac5dabe95c5ed2c7c8ff5c8d7c89217eccabd429
+    //index:99
+    //maxNumber:undefined
+    //result:16995215681031714692496341136721863481315624077444005848453974138946021969857
+
+    const seed =
+      '0x814cc265bde15991d28d4212ac5dabe95c5ed2c7c8ff5c8d7c89217eccabd429';
+    const index = 99;
+    const maxNumber = undefined;
+    const result = randomWithSeed(seed, index, maxNumber);
+    expect(result).to.equal(
+      '16995215681031714692496341136721863481315624077444005848453974138946021969857'
+    );
+
     for (let i = 0; i < 100; i++) {
       const seed = ethers.utils.randomBytes(32);
       const random1 = await contract.getRandomBySeed(seed, i);
