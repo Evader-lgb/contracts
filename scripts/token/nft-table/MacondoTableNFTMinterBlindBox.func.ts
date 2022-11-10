@@ -1,19 +1,23 @@
 import { BigNumberish } from 'ethers';
 import { ethers } from 'hardhat';
+import { ContractDeployAddress } from '../../consts/deploy.address.const';
 
 const { CONTRACT_DEFAULT_CALLER_ADDRESS } = process.env;
 
 async function getContract() {
   const contract = await ethers.getContractAt(
     'MacondoTableNFTMinterBlindBox',
-    '0x55Cc50499747951d9fDD66D9867c00b8EbFA5d66'
+    ContractDeployAddress.MacondoTableNFTMinterBlindBox
   );
   const [owner] = await ethers.getSigners();
 
   return contract.connect(owner);
 }
 
-async function setSaleConfig(initTokenId: BigNumberish) {
+async function setSaleConfig(
+  initTokenId: BigNumberish,
+  initTotalSupply: BigNumberish
+) {
   const contract = await getContract();
 
   await contract.setInitialTokenId(initTokenId);
@@ -21,8 +25,8 @@ async function setSaleConfig(initTokenId: BigNumberish) {
     '1',
     ethers.utils.parseEther('0.05'),
     Math.floor(new Date().getTime() / 1000) - 20 * 60,
-    Math.floor(new Date().getTime() / 1000) + 10 * 24 * 60 * 60,
-    '7'
+    Math.floor(new Date().getTime() / 1000) + 30 * 24 * 60 * 60,
+    initTotalSupply
   );
   await tx.wait();
 
@@ -95,9 +99,9 @@ async function withdraw() {
 }
 
 async function main() {
-  // await setSaleConfig('110013');
+  await setSaleConfig('110019', 21);
   // await getSaleConfig();
-  await saleOne();
+  // await saleOne();
   // await withdraw();
 }
 
