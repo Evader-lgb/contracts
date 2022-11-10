@@ -29,7 +29,7 @@ module.exports = {
 
   networks: {
     bsc_testnet: {
-      url: 'https://bsc-testnet.blockvision.org/v1/2EVSmLkqat2srLsqOUSjPcYbjpH',
+      url: 'https://macondo:macondo@apis.ankr.com/dc6b7aacd5264d7da2a720924d7f43d4/076fde4bad3f062d326ccc9dab7c7a38/binance/full/test',
       chainId: 97,
       gasPrice: 20000000000,
       accounts: [`0x${PRIVATE_KEY}`],
