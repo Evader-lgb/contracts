@@ -6,6 +6,6 @@ export const ContractDeployAddress = {
   MacondoTableNFT: '0x1A516d0E324575Fd6BdD2E54FB9cFcB6C8F3e7A4',
   MacondoTableNFTMinterBlindBox: '0x3eae3657402FE9516093Ef6c7a3773c028BA5354',
   MacondoPokerPass: '0xc26AcBB08E7c30375748ad0D4462fD140d9BCDBc',
-  MacondoPokerPassMinterBlindBox: '0x5a8E09b7c7c55650fDc893009289B27677625d60',
+  MacondoPokerPassMinterBlindBox: '0x6c2f1e09B427fe3486cC1dc447D02fdB72A16D76',
   AccountBurn: '0xA001e11eccae7926E68937A473C7a58DdE8B08F5',
 };

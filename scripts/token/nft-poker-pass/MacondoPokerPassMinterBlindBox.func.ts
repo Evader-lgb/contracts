@@ -1,19 +1,23 @@
 import { BigNumberish } from 'ethers';
 import { ethers } from 'hardhat';
+import { ContractDeployAddress } from '../../consts/deploy.address.const';
 
 const { CONTRACT_DEFAULT_CALLER_ADDRESS } = process.env;
 
 async function getContract() {
   const contract = await ethers.getContractAt(
     'MacondoPokerPassMinterBlindBox',
-    '0x5a8E09b7c7c55650fDc893009289B27677625d60'
+    ContractDeployAddress.MacondoPokerPassMinterBlindBox
   );
   const [owner] = await ethers.getSigners();
 
   return contract.connect(owner);
 }
 
-async function setSaleConfig(initTokenId: BigNumberish) {
+async function setSaleConfig(
+  initTokenId: BigNumberish,
+  initTotalSupply: BigNumberish
+) {
   const contract = await getContract();
 
   await contract.setInitialTokenId(initTokenId);
@@ -22,7 +26,7 @@ async function setSaleConfig(initTokenId: BigNumberish) {
     ethers.utils.parseEther('0.02'),
     Math.floor(new Date().getTime() / 1000) - 20 * 60,
     Math.floor(new Date().getTime() / 1000) + 10 * 24 * 60 * 60,
-    '100'
+    initTotalSupply
   );
   await tx.wait();
 
@@ -95,9 +99,9 @@ async function withdraw() {
 }
 
 async function main() {
-  // await setSaleConfig('11000000');
+  await setSaleConfig('11000010', '500');
   // await getSaleConfig();
-  await saleOne();
+  // await saleOne();
   // await withdraw();
 }
 
