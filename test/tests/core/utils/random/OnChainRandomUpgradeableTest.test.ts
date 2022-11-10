@@ -1,9 +1,19 @@
 import { expect } from 'chai';
-import { BigNumberish, Contract } from 'ethers';
+import { BigNumber, BigNumberish, Contract } from 'ethers';
 import { ethers, upgrades } from 'hardhat';
 
-function randomWithSeed(seed: BigNumberish, index: BigNumberish): string {
-  return ethers.utils.solidityKeccak256(['uint256', 'uint256'], [seed, index]);
+function randomWithSeed(
+  seed: BigNumberish,
+  index: BigNumberish,
+  maxNumber?: BigNumberish
+): BigNumber {
+  const random = BigNumber.from(
+    ethers.utils.solidityKeccak256(['uint256', 'uint256'], [seed, index])
+  );
+  if (maxNumber) {
+    return random.mod(maxNumber);
+  }
+  return random;
 }
 
 describe('OnChainRandomUpgradeableTest', () => {
@@ -49,6 +59,16 @@ describe('OnChainRandomUpgradeableTest', () => {
       const seed = ethers.utils.randomBytes(32);
       const random1 = await contract.getRandomBySeed(seed, i);
       const random2 = randomWithSeed(seed, i);
+      expect(random1).to.equal(random2);
+    }
+  });
+
+  it('should return a random number with a seed and index with maxNumber', async () => {
+    for (let i = 0; i < 100; i++) {
+      const seed = ethers.utils.randomBytes(32);
+      const mod = i + 1;
+      const random1 = await contract.getRandomBySeed2(seed, i, mod);
+      const random2 = randomWithSeed(seed, i, mod);
       expect(random1).to.equal(random2);
     }
   });
