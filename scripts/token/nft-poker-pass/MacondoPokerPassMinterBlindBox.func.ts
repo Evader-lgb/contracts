@@ -25,7 +25,7 @@ async function setSaleConfig(
     '1',
     ethers.utils.parseEther('0.02'),
     Math.floor(new Date().getTime() / 1000) - 20 * 60,
-    Math.floor(new Date().getTime() / 1000) + 10 * 24 * 60 * 60,
+    Math.floor(new Date().getTime() / 1000) + 30 * 24 * 60 * 60,
     initTotalSupply
   );
   await tx.wait();
