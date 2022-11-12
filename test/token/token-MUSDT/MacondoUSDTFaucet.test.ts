@@ -18,10 +18,10 @@ describe('MacondoUSDTFaucet', function () {
     ]);
     await macondoUSDTFaucet.deployed();
 
-    //grant minter role to macondoUSDTFaucet
-    await macondoUSDT.grantRole(
-      await macondoUSDT.MINTER_ROLE(),
-      macondoUSDTFaucet.address
+    // Mint 1000 eth tokens to the faucet
+    await macondoUSDT.mint(
+      macondoUSDTFaucet.address,
+      ethers.utils.parseEther('1000')
     );
   });
 

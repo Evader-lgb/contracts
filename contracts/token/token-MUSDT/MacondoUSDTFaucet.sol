@@ -6,6 +6,7 @@ import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol"
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 
 import "./MacondoUSDT.sol";
 
@@ -28,6 +29,8 @@ contract MacondoUSDTFaucet is
     uint256 public faucetAmount;
     /// 已经领取的地址=>领取时间
     mapping(address => uint256) public faucetTime;
+
+    using SafeERC20Upgradeable for MacondoUSDT;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -93,10 +96,16 @@ contract MacondoUSDTFaucet is
             revert("MacondoUSDTFaucet: claim amount must be greater than zero");
         }
 
+        //检查余额是否足够
+        uint256 balance = macondoUSDT.balanceOf(address(this));
+        if (balance < _amount) {
+            revert("MacondoUSDTFaucet: faucet balance is not enough");
+        }
+
         //记录领取时间
         faucetTime[_to] = block.timestamp;
         //发放
-        macondoUSDT.mint(_to, _amount);
+        macondoUSDT.safeTransfer(_to, _amount);
         //触发事件
         emit Faucet(_to, _amount);
     }
