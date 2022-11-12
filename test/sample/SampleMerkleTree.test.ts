@@ -1,8 +1,7 @@
+import { expect } from 'chai';
 import { Contract } from 'ethers';
 import { ethers } from 'hardhat';
 import MerkleTree from 'merkletreejs';
-const { expect } = require('chai');
-
 describe('SampleMerkleTree', () => {
   let contract: Contract;
 
