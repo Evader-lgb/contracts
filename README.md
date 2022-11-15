@@ -4,7 +4,7 @@
 
 ### mainnet bsc
 
-coming soon!
+coming soon!！
 
 ### bsc testnet
 
