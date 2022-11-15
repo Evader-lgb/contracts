@@ -49,12 +49,7 @@ module.exports = {
     timeout: 2 * 60 * 1000,
   },
   abiExporter: {
-    except: [
-      'contracts/sample',
-      'contracts/tests',
-      'contracts/labs',
-      'contracts/core',
-    ],
+    except: ['contracts/core'],
   },
   defender: {
     apiKey: process.env.CONTRACT_DEPLOYER_DEFENDER_TEAM_API_KEY,

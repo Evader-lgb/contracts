@@ -26,6 +26,8 @@ describe('RandomOracleConsumer', function () {
       m_keyHash
     );
     await contract.deployed();
+
+    console.log('contract address:', CHAIN_LINK_TESTNET_URL);
     provider = new ethers.providers.JsonRpcProvider(CHAIN_LINK_TESTNET_URL);
   });
 
