@@ -33,7 +33,7 @@ coming soon!
 - `RandomOracleConsumer`:`0x27e69a1acd722A0aA02F4bf611Ea797bFC4Ba3Ee`
   - [bscscan](https://testnet.bscscan.com/address/0x27e69a1acd722A0aA02F4bf611Ea797bFC4Ba3Ee)
 
-## how to develop
+## how to develop and test
 
 ### Principle of development
 
