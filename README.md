@@ -55,7 +55,7 @@ cd contracts
 npm install --package-lock-only
 ```
 
-工程结构如下 - The project structure is as follows
+The project structure is as follows
 
 ```shell
 contracts/
