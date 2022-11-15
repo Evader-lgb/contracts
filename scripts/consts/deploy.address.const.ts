@@ -9,4 +9,6 @@ export const ContractDeployAddress = {
   MacondoPokerPassMinterBlindBox: '0x6c2f1e09B427fe3486cC1dc447D02fdB72A16D76',
   AccountBurn: '0xA001e11eccae7926E68937A473C7a58DdE8B08F5',
   PokerValidator: '0x3d7Ea2034ca2d25B71EF55380e309d7b5884b2d3',
+  TokenCollection: '0x8023cCfaF67a34628e6e3093B3557E6184782289',
+  RandomOracleConsumer: '0x27e69a1acd722A0aA02F4bf611Ea797bFC4Ba3Ee',
 };

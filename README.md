@@ -1,18 +1,51 @@
 # Macondo contracts
 
-## 如何进行开发
+## contract addresses
 
-### 开发原则
+### mainnet bsc
 
-#### TDD(测试驱动开发)
+coming soon!
 
-开发流程需要严格遵循测试驱动开发原则,先写测试用例,再写功能实现.
+### bsc testnet
 
-#### 代码提交,需要测试用例全部通过
+- `MacondoBFB`: `0x849Ac2eAF42C7239A1f807f250928Eac23376C63`
+  - [bscscan](https://testnet.bscscan.com/address/0x849Ac2eAF42C7239A1f807f250928Eac23376C63)
+- `MacondoMCD`: `0xC3a787C2B1AB52e18bA5387a13c5B6551A89f006`
+  - [bscscan](https://testnet.bscscan.com/address/0xC3a787C2B1AB52e18bA5387a13c5B6551A89f006)
+- `MacondoUSDT`:`0x97310efB7831A90d9C33e2ddC2E22dF6ef3e9dcA`
+  - [bscscan](https://testnet.bscscan.com/address/0x97310efB7831A90d9C33e2ddC2E22dF6ef3e9dcA)
+- `MacondoUSDTFaucet`: `0x83Ade0d3b2B198Ea9674A045D900f750aE568Be6`
+  - [bscscan](https://testnet.bscscan.com/address/0x83Ade0d3b2B198Ea9674A045D900f750aE568Be6)
+- `MacondoTableNFT`:`0x1A516d0E324575Fd6BdD2E54FB9cFcB6C8F3e7A4`
+  - [bscscan](https://testnet.bscscan.com/address/0x1A516d0E324575Fd6BdD2E54FB9cFcB6C8F3e7A4)
+- `MacondoTableNFTMinterBlindBox`:`0x3eae3657402FE9516093Ef6c7a3773c028BA5354`
+  - [bscscan](https://testnet.bscscan.com/address/0x3eae3657402FE9516093Ef6c7a3773c028BA5354)
+- `MacondoPokerPass`:`0xc26AcBB08E7c30375748ad0D4462fD140d9BCDBc`
+  - [bscscan](https://testnet.bscscan.com/address/0xc26AcBB08E7c30375748ad0D4462fD140d9BCDBc)
+- `MacondoPokerPassMinterBlindBox`:`0x6c2f1e09B427fe3486cC1dc447D02fdB72A16D76`
+  - [bscscan](https://testnet.bscscan.com/address/0x6c2f1e09B427fe3486cC1dc447D02fdB72A16D76)
+- `AccountBurn`:`0xA001e11eccae7926E68937A473C7a58DdE8B08F5`
+  - [bscscan](https://testnet.bscscan.com/address/0xA001e11eccae7926E68937A473C7a58DdE8B08F5)
+- `PokerValidator`:`0x3d7Ea2034ca2d25B71EF55380e309d7b5884b2d3`
+  - [bscscan](https://testnet.bscscan.com/address/0x3d7Ea2034ca2d25B71EF55380e309d7b5884b2d3)
+- `TokenCollection`:`0x8023cCfaF67a34628e6e3093B3557E6184782289`
+  - [bscscan](https://testnet.bscscan.com/address/0x8023cCfaF67a34628e6e3093B3557E6184782289)
+- `RandomOracleConsumer`:`0x27e69a1acd722A0aA02F4bf611Ea797bFC4Ba3Ee`
+  - [bscscan](https://testnet.bscscan.com/address/0x27e69a1acd722A0aA02F4bf611Ea797bFC4Ba3Ee)
 
-#### 增量设计
+## how to develop
 
-### 实际工程开发
+### Principle of development
+
+#### TDD(Test-Driven Development)
+
+The development process must strictly follow the principle of test-driven development, write test cases first, and then write the function implementation.
+
+#### Code submission requires all test cases to pass
+
+#### Incremental design
+
+### Actual engineering development
 
 #### Update With npm
 
@@ -22,37 +55,26 @@ cd contracts
 npm install --package-lock-only
 ```
 
-工程结构如下
+工程结构如下 - The project structure is as follows
 
 ```shell
 contracts/
-├── contracts          ---合约源代码目录，主要存放 *.sol  /
+├── contracts          --- Contract source code directory, mainly store *.sol contract files
 │   ├── HelloWorld.sol
 │   └── ...
-├── scripts            ---js脚本目录，主要存放部署脚本。/
+├── scripts            --- js script directory, mainly store deployment scripts.
 │   ├── HelloWorld-deploy.js
 │   └── ...
-├── test               ---合约单元测试目录/
+├── test               --- Contract unit test directory
 │   ├── HelloWorld-test.js
 │   └── ...
-├── hardhat.config.js  ---hardhat配置文件
+├── hardhat.config.js  --- hardhat configuration file
 ├── package.json
-├── .env               ---环境变量文件（需要自己手动建立）
+├── .env               --- Environment variable file (need to be created manually)
 └── ...
 ```
 
-### env 文件说明
-
-```env
-#ALCHEMY API地址
-ALCHEMY_API_URL=https://xxx/v2/xxx
-#ALCHEMY DAPP Key
-ALCHEMY_API_KEY="xxx"
-#部署合约使用的私钥
-PRIVATE_KEY="3xxx"
-```
-
-## 自动化测试
+## - Automated testing
 
 Running Test Locally (Recommend)
 
@@ -70,9 +92,9 @@ Running Test On Polygon Testnet
 npx hardhat test --network mumbai
 ```
 
-## 部署
+## Deployment
 
-### 部署合约到测试网络 or 正式网络
+### Deploy contract to testnet or mainnet
 
 ```shell
 npx hardhat run scripts/HelloWorld-deploy.ts --network mumbai
@@ -83,51 +105,35 @@ npx hardhat run --network bsc_testnet scripts/HelloWorld-deploy.ts
 npx hardhat run --network bsc_testnet filePath
 ```
 
-### 记录合约部署后的地址
+### Record the address of the contract after deployment
 
 ```shell
 HelloWorld deployed to:0x3F0528D040f31ace17a0c733469145928b9C88a4
 ```
 
-记录其中的 `0x3F0528D040f31ace17a0c733469145928b9C88a4` 到任意你喜欢的地方,方便 `game-service-contract` 服务调用.
+Record `0x3F0528D040f31ace17a0c733469145928b9C88a4` to any place you like, which is convenient for the `game-service-contract` service to call.
 
-### 编译合约 ABI
+### Compile contract ABI
 
 ```shell
 npm run compile
 ```
 
-生成合约到对应的目录结构
+#### Generate contracts to the corresponding directory structure
+
+````shell
 
 ```bash
 contracts/
 ├── abi/
 │   └── contracts/
 │       ├── HelloWorld.sol/
-│       │   ├── HelloWorld.json  ---abi 描述文件
-│       │   └── HelloWorld.ts    ---abi Typescript文件
+│       │   ├── HelloWorld.json  ---abi description file
+│       │   └── HelloWorld.ts    ---abi Typescript file
 │       └── OtherXXX.sol/
 │           ├── OtherXXX.json
 │           └── OtherXXX.ts
 └── ...
-```
+````
 
-拷贝`abi/`目录下的文件到对应的工程里面使用
-
-## Hardhat Tools Help
-
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts.
-
-Try running some of the following tasks:
-
-```shell
-npx hardhat accounts
-npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-node scripts/sample-script.js
-npx hardhat help
-
-npx hardhat export-abi
-```
+Copy the files in the `abi/` directory to the corresponding project for use

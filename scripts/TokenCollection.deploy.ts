@@ -5,12 +5,12 @@
 // Runtime Environment's members available in the global scope.
 // const hre = require("hardhat");
 import { ethers } from 'hardhat';
+import { ContractDeployAddress } from './consts/deploy.address.const';
 import { deployUpgradeProxy, deployUpgradeUpdate } from './utils/deploy.util';
 const { CONTRACT_DEFAULT_CALLER_ADDRESS } = process.env;
 
 async function main() {
-  // const contractAddress = null;
-  const contractAddress = '0x8023cCfaF67a34628e6e3093B3557E6184782289';
+  const contractAddress = ContractDeployAddress.TokenCollection;
   const DeployContractName = 'TokenCollection';
   if (contractAddress) {
     const contract = await deployUpgradeUpdate(

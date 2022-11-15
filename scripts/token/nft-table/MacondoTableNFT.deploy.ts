@@ -5,6 +5,7 @@
 // Runtime Environment's members available in the global scope.
 // const hre = require("hardhat");
 import { ethers } from 'ethers';
+import { ContractDeployAddress } from '../../consts/deploy.address.const';
 import {
   deployUpgradeProxy,
   deployUpgradeUpdate,
@@ -19,7 +20,7 @@ async function main() {
   //old nft contract address
   // const contractAddress = '0x273a7ce03D2B00afde547830a1B38E616081C992';
   //new nft contract address
-  const contractAddress = '0x1A516d0E324575Fd6BdD2E54FB9cFcB6C8F3e7A4';
+  const contractAddress = ContractDeployAddress.MacondoTableNFT;
 
   const DeployContractName = 'MacondoTableNFT';
   if (contractAddress) {
