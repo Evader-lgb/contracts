@@ -26,6 +26,8 @@ describe('RandomOracleConsumer', function () {
       m_keyHash
     );
     await contract.deployed();
+
+    console.log('contract address:', CHAIN_LINK_TESTNET_URL);
     provider = new ethers.providers.JsonRpcProvider(CHAIN_LINK_TESTNET_URL);
   });
 
@@ -60,11 +62,10 @@ describe('RandomOracleConsumer', function () {
 
     let s_requestId: BigNumber = await contract.s_requestId();
     if (s_requestId.eq(0)) {
-      await expect(
-        contract.requestRandomWords({
-          gasLimit: 300000,
-        })
-      ).to.emit(contract, 'RequestComplete');
+      await expect(contract.requestRandomWords({})).to.emit(
+        contract,
+        'RequestComplete'
+      );
       s_requestId = await contract.s_requestId();
     }
 
